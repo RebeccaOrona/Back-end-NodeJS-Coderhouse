@@ -5,10 +5,15 @@ import { v4 as uuidv4 } from 'uuid';
 const PRODUCTS_FILE = 'products.json';
 
 const productManager = {
-  getAllProducts: async () => {
+  getAllProducts: async (limit) => {
     try {
       const data = await fs.readFile(PRODUCTS_FILE, 'utf8');
-      const products = JSON.parse(data);
+      let products = JSON.parse(data);
+  
+      if (limit && typeof limit === 'number' && limit > 0) {
+        products = products.slice(0, limit);
+      }
+  
       return products;
     } catch (error) {
       throw error;

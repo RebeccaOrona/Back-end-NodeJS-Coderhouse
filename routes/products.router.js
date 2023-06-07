@@ -8,7 +8,8 @@ const productsRouter = express.Router();
 // Obtener todos los productos
 productsRouter.get('/', async (req, res) => {
     try {
-      const products = await productManager.getAllProducts();
+      const limit = parseInt(req.query.limit);
+      const products = await productManager.getAllProducts(limit);
       res.json(products);
     } catch (error) {
       res.status(500).json({ error: 'Error al obtener los productos' });

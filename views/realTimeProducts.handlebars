@@ -1,0 +1,16 @@
+<!-- Código HTML en realTimeProducts.handlebars -->
+<ul id="productList">
+  <!-- Lógica de renderizado de la lista de productos -->
+</ul>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  // Conexión al servidor de WebSockets
+  const socket = io();
+
+  // Escucha el evento 'productList' y actualiza la lista de productos
+  socket.on('productList', (productList) => {
+    const productListContainer = document.getElementById('productList');
+    // Actualiza la lista de productos en la vista
+  });
+</script>

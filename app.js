@@ -1,66 +1,80 @@
 import express from 'express';
-import __dirname from './utils.js';
-import path from 'path';
 import http from 'http';
 import { Server } from 'socket.io';
+import path from 'path';
 import handlebars from 'express-handlebars';
-import viewsRouter from './routes/views.router.js';
+import productsRouter from './routes/products.routes.js';
+import cartsRouter from './routes/carts.routes.js';
+import viewsRouter from './routes/views.routes.js';
+import __dirname from './utils.js';
+import { addProduct, deleteProduct } from './managers/ProductManager.js';
+
+
 
 const app = express();
+const httpServer = http.createServer(app);
+const io = new Server(httpServer);
 
- // Inicio del servidor
- const PORT = 8080;
- const httpServer = http.createServer(app);
- httpServer.listen(PORT, () => {
-  console.log(`Listening on PORT ${PORT}`);
-  console.log(path.join(__dirname, 'views'));
-  console.log(path.join(__dirname, 'public'));
-});
-const socketServer = new Server(httpServer);
-
-
-// Configuración de Handlebars
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'handlebars');
-// Configuración del directorio de vistas
-app.set('views',path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', viewsRouter);
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-// Configuración del servidor de archivos estáticos
-
-
-
-
-
-
-
-
-
-// Configuración de las rutas y lógica del servidor
-
-// Configuración del servidor de WebSockets
-socketServer.on('connection', socket => {
-  console.log('Un nuevo cliente se ha conectado.');
-
-
-  socket.on('message',data=>{
-    console.log(data);
+// Configurar el motor de plantillas Handlebars
+app.engine(
+  'handlebars',
+  handlebars.engine({
+    defaultLayout: 'main',
+    layoutsDir: path.join(__dirname, 'views/layouts'),
   })
+);
+app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Evento que se dispara cuando se recibe un mensaje del cliente.
+// Configurar el servidor de Socket.io
+io.on('connection', socket => {
+  console.log('New client connected');
 
- socket.broadcast.emit('user_connected', `User ${socket.id} has connected.`);
+  // Escuchar el evento 'newProduct' enviado por el cliente y emitir 'productCreated' a todos los clientes
+  socket.on('newProductData', async (newProductData) => {
+    // Lógica para agregar el nuevo producto a la lista
+    const createdProduct = addProduct(newProductData);
+    
+    // Verificar si se pudo agregar el producto correctamente
+    if (createdProduct) {
+      // Emitir el evento 'productCreated' a todos los clientes con el nuevo producto
+      io.emit('productCreated', await createdProduct);
+    }
+  });
+  
+  // Escuchar el evento 'productDeleted' enviado por el cliente y emitir 'productDeleted' a todos los clientes
+  socket.on('deleteProduct', (productId) => {
+    // Lógica para eliminar el producto de la lista
+    const deletedProduct = deleteProduct(productId);
+  
+  
+    // Verificar si se pudo eliminar el producto correctamente
+    if (deletedProduct) {
+      // Emitir el evento 'productDeleted' a todos los clientes con el ID del producto eliminado
+      io.emit('productDeleted', productId);
+    }
+  });
 
- // Emite un mensaje a todos los clientes excepto al que se acaba de conectar.
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
 
- socket.emit('individual', 'Bienvenido!');
+// Middleware para parsear el cuerpo de las solicitudes como JSON
+app.use(express.json());
 
- // Envía un mensaje individual al cliente que se acaba de conectar.
+// Configurar el router para /api/products
+app.use('/api/products', productsRouter);
 
-// // Evento para manejar la desconexión de un cliente
-// socketServer.on('disconnect', () => {
-//   console.log('Un cliente se ha desconectado.');
-// });
+// Configurar el router para /api/carts
+app.use('/api/carts', cartsRouter);
+
+// Configurar el router para /api/views
+app.use('/api/views', viewsRouter);
+
+
+// Iniciar el servidor
+httpServer.listen(8080, () => {
+  console.log('Server is running on port 8080');
 });

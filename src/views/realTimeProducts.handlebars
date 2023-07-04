@@ -1,0 +1,27 @@
+<!-- realTimeProducts.handlebars -->
+
+<!-- Lista de productos -->
+<div>
+  <h1>List of Products</h1>
+  <ul id="productList">
+    {{#each products}}
+    <li data-productId="{{this.id}}">
+      <p>Title: {{this.title}}</p>
+      <p>Id: {{this.id}}</p> 
+      <button class="deleteButton" data-productId="{{this.id}}">Delete</button>
+    </li>
+    {{/each}}
+  </ul>
+</div>
+
+
+
+<!-- Formulario para crear un nuevo producto -->
+<form id="newProductForm">
+  <input type="text" name="product" placeholder="Nombre del producto" required>
+  <button type="submit">Crear producto</button>
+</form>
+
+<!-- Script para escuchar eventos del formulario y enviar datos al servidor a través de websockets -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/index.js"></script>

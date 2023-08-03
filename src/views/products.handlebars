@@ -1,0 +1,84 @@
+<!-- products.handlebars -->
+
+<!-- Lista de productos -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            background-color: #fff;
+        }
+
+        h3 {
+            color: #007BFF;
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .addToCartButton {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .addToCartButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div>
+  <a id="carritoLink" href="#">Carrito</a>
+  <h1>List of Products</h1>
+  
+  <ul>
+    {{#each products.docs}}
+    <li>
+      <h3>{{this.title}}</h3>
+      <p>Price: {{this.price}}</p>
+      <p>Category: {{this.category}}</p>
+      <a href="/api/products/{{this._id}}">Ver detalles</a>
+      <button class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">Agregar al carrito</button>
+    </li>
+    {{/each}}
+  </ul>
+</div>
+</body>
+</html>
+
+<!-- Script para escuchar eventos del botón "Agregar al carrito" y enviar datos al servidor a través de websockets -->
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/socket.io-client/dist/socket.io.js"></script>
+<script type="module" src="/indexProducts.js"></script>

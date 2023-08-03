@@ -46,11 +46,11 @@ productsRouter.get('/:pid', async (req, res) => {
   }
 });
 
-productsRouter.post('/', async (req, res) => {
+productsRouter.post('/createOne', async (req, res) => {
   try {
     const newProduct = req.body;
-    const product = await addProduct(newProduct);
-    res.status(201).json(product);
+      const product = await productsModel.create(newProduct);
+    res.send({ status: "success", payload: product });
   } catch (error) {
     res.status(500).json({ error: 'Failed to create product' });
   }
@@ -73,9 +73,12 @@ try {
 
 productsRouter.put('/:pid', async (req, res) => {
   try {
-    const productId = req.params.pid;
+    const {uid} = req.params;
     const updatedProductData = req.body;
-    const updatedProduct = await updateProduct(productId, updatedProductData);
+    if(!updatedProductData.title!updatedProductData.description!updatedProductData.code!updatedProductData.price!updatedProductData.status!updatedProductData.stock!updatedProductData.category||!updatedProductData.thumbnail)
+        return res.send({status:"error",error:"Incomplete Values"})
+
+    const updatedProduct = await productsModel.updateOne({_id:uid}, updatedProductData)
     if (updatedProduct) {
       res.json(updatedProduct);
     } else {
@@ -88,8 +91,8 @@ productsRouter.put('/:pid', async (req, res) => {
 
 productsRouter.delete('/:pid', async (req, res) => {
   try {
-    const productId = req.params.pid;
-    const deletedProduct = await deleteProduct(productId);
+    const {uid} = req.params;
+    const deletedProduct = await productsModel.deleteOne({_id:uid})
     if (deletedProduct) {
       res.json(deletedProduct);
     } else {

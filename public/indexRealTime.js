@@ -1,3 +1,4 @@
+
 const socket = io();
 
 
@@ -44,7 +45,6 @@ const socket = io();
 
   // Listen for click events on delete buttons
 document.addEventListener('click', (event) => {
-  console.log("a");
   if (event.target.classList.contains('deleteButton')) {
     const productId = event.target.getAttribute('data-productId');
     console.log(productId);
@@ -61,15 +61,3 @@ document.addEventListener('click', (event) => {
       itemToDelete.remove();
     }
   });
-  // socket.on('productDeleted', (productId) => {
-  //   /// Obtener la lista de productos en el DOM
-  //   const productList = document.getElementById('productList');
-
-  //   // Buscar el elemento de lista que corresponde al producto eliminado por su identificador
-  //   const itemToDelete = Array.from(productList.children).find((item) => item.dataset.productId === productId);
-
-  //   // Eliminar el elemento de la lista si se encontró
-  //   if (itemToDelete) {
-  //     itemToDelete.remove();
-  //   }
-  // });

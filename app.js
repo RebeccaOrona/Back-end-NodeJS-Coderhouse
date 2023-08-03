@@ -1,5 +1,7 @@
 import express from 'express';
 import http from 'http';
+import mongoose from 'mongoose';
+import axios from 'axios';
 import { Server } from 'socket.io';
 import path from 'path';
 import handlebars from 'express-handlebars';
@@ -15,12 +17,20 @@ const app = express();
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 
+const baseURL = 'http://localhost:8080';
+const api = axios.create({
+  baseURL: baseURL,
+});
+
 // Configurar el motor de plantillas Handlebars
 app.engine(
   'handlebars',
   handlebars.engine({
     defaultLayout: 'main',
     layoutsDir: path.join(__dirname, 'views/layouts'),
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+    },
   })
 );
 app.set('view engine', 'handlebars');
@@ -29,6 +39,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Configurar el servidor de Socket.io
 io.on('connection', socket => {
+  socket.emit('newClientConnected')
+  
   console.log('New client connected');
 
   // Escuchar el evento 'newProduct' enviado por el cliente y emitir 'productCreated' a todos los clientes
@@ -56,6 +68,31 @@ io.on('connection', socket => {
     }
   });
 
+  socket.on('cartCreated', (cartId) => {
+    console.log(cartId);
+    socket.emit('cartCreated', cartId);
+  })
+
+    socket.on('addToCart', async (data) => {
+      try {
+        console.log(data);
+        const cartId = data.cartId; // Obtén el ID del carrito del usuario actual
+        console.log(cartId);
+        const productId = data.productId;
+        console.log(productId);
+        // Make a POST request to add the product to the cart
+        await api.post(`/api/carts/${cartId}/product/${productId}`);
+        
+        // Emit the 'productAddedToCart' event to all clients
+        io.emit('productAddedToCart', productId);
+      } catch (error) {
+        // Handle the error if the request fails
+        console.error('Failed to add product to cart:', error);
+      }
+    });
+  
+  
+
   socket.on('disconnect', () => {
     console.log('Client disconnected');
   });
@@ -70,11 +107,19 @@ app.use('/api/products', productsRouter);
 // Configurar el router para /api/carts
 app.use('/api/carts', cartsRouter);
 
-// Configurar el router para /api/views
-app.use('/api/views', viewsRouter);
-
+// Configurar el router para views
+app.use('/', viewsRouter);
 
 // Iniciar el servidor
 httpServer.listen(8080, () => {
   console.log('Server is running on port 8080');
 });
+
+const connectToMongo = async () => {
+  await mongoose.connect('mongodb+srv://becca:123@coderhousebackend.gbvr1iq.mongodb.net/?retryWrites=true&w=majority').then(() =>{
+    console.log("Connected to the database");
+}).catch((err) => {
+  console.log(err);
+})};
+
+connectToMongo();

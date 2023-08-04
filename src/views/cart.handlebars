@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        div {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            background-color: #fff;
+        }
+
+        h3 {
+            color: #007BFF;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cart</h1>
+    {{#each cart.products}}
+    <div>
+        <h3>{{this.product.title}}</h3>
+        <p>Price: {{this.product.price}}</p>
+        <p>Quantity: {{this.quantity}}</p>
+    </div>
+    {{/each}}
+    <a href="/products">Volver a lista de productos</a>
+</body>
+</html>

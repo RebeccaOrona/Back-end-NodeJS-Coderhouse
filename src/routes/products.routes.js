@@ -73,14 +73,12 @@ try {
 
 productsRouter.put('/:pid', async (req, res) => {
   try {
-    const {uid} = req.params;
+    const {pid} = req.params;
     const updatedProductData = req.body;
-    if(!updatedProductData.title!updatedProductData.description!updatedProductData.code!updatedProductData.price!updatedProductData.status!updatedProductData.stock!updatedProductData.category||!updatedProductData.thumbnail)
-        return res.send({status:"error",error:"Incomplete Values"})
 
-    const updatedProduct = await productsModel.updateOne({_id:uid}, updatedProductData)
+    const updatedProduct = await productsModel.updateOne({_id:pid}, updatedProductData)
     if (updatedProduct) {
-      res.json(updatedProduct);
+      res.send({ status: "success", payload: updatedProductData });
     } else {
       res.status(404).json({ error: 'Product not found' });
     }

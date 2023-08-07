@@ -11,17 +11,22 @@ router.get('/login', (req, res) => {
     res.render('login');
 })
 
-router.get('/', (req, res) => {
+router.get('/profile', (req, res) => {
     res.render('profile', {
         user: req.session.user
     });
 })
 
-viewsRouter.use('/products', productsRouter);
+router.get('/logout', (req, res) => {
+  res.render('logout');
+})
+
+
+router.use('/products', productsRouter);
   
 
   // Ruta para la vista "realTimeProducts.handlebars" (lista de productos en tiempo real)
-viewsRouter.get('/realtimeproducts', async (req, res) => {
+router.get('/realtimeproducts', async (req, res) => {
     try {
       const products = await getAllProducts();
       res.render('realTimeProducts', { products });

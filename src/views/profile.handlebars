@@ -1,6 +1,94 @@
-<div>
-    <h1>Tu perfil (sin datos sensibles)</h1>
-    <p>{{user.name}}</p>
-    <p>{{user.email}}</p>
-    <p>{{user.age}}</p>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tu Perfil</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #logoutButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+       #productsButton {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 9999;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            }
+
+        #productsButton:hover {
+            background-color: #0056b3;
+        }
+
+        .profile-heading {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-details {
+            margin-bottom: 10px;
+        }
+
+        .profile-details p {
+            margin-bottom: 5px;
+        }
+
+        .profile-details p span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a id="productsButton" href="/products" class="btn btn-primary">Volver a lista de productos</a>
+        <a id="logoutButton" href="/logout" class="btn btn-primary">Desconectarse</a>
+        <div class="profile-heading">
+            <h1>Tu perfil</h1>
+        </div>
+        <div class="profile-details">
+            {{#if user.name}}
+            <p><span>Nombre:</span> {{user.name}}</p>
+            {{else}}
+            <p><span>Nombre:</span> No existente</p>
+            {{/if}}
+
+            {{#if user.email}}
+            <p><span>Email:</span> {{user.email}}</p>
+            {{else}}
+            <p><span>Email:</span> No existente</p>
+            {{/if}}
+
+            {{#if user.age}}
+            <p><span>Edad:</span> {{user.age}}</p>
+            {{else}}
+            <p><span>Edad:</span> No existente</p>
+            {{/if}}
+
+            <p><span>Rol:</span> {{user.role}}</p>
+        </div>
+    </div>
+</body>
+</html>

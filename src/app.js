@@ -12,6 +12,7 @@ import viewsRouter from './routes/views.router.js';
 import productsRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
 import sessionsRouter from './routes/sessions.router.js';
+import cors from 'cors';
 
 
 const mongoUrl = 'mongodb+srv://becca:123@coderhousebackend.gbvr1iq.mongodb.net/?retryWrites=true&w=majority';
@@ -22,18 +23,27 @@ const connection = mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
+// const cache = new NodeCache();
 app.use(express.json());
+app.use(cors({
+  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']}
+  ));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'))
 app.use(session({
     store: new MongoStore({
         mongoUrl: mongoUrl,
+        mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
         ttl: 3600
     }),
     secret: "CoderSecretSHHHHH",
-    resave: false,
-    saveUninitialized: false
+    resave: true,
+    saveUninitialized: true
 }))
+const baseURL = 'http://localhost:8080';
+const api = axios.create({
+  baseURL: baseURL,
+});
 
 app.engine(
     'handlebars',
@@ -49,7 +59,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
 // Configurar el servidor de Socket.io
-io.on('connection', socket => {
+io.on('connection', async socket => {
     socket.emit('newClientConnected')
     
     console.log('New client connected');
@@ -102,7 +112,17 @@ io.on('connection', socket => {
         }
       });
     
+      socket.on('userData', (userData) => {
+        console.log(userData);
+      });
+    //   // Event listener for 'getUserData' event from the client
+    //   socket.on('getUserData', (acknowledgmentCallback) => {
+    //   // Get the userData from cache (or wherever you stored it)
+    //   const userData = cache.get('userData');
     
+    //   // Send the userData back to the client as acknowledgment
+    //   acknowledgmentCallback(userData);
+    // });
   
     socket.on('disconnect', () => {
       console.log('Client disconnected');
@@ -123,3 +143,6 @@ app.use('/api/sessions', sessionsRouter);
 httpServer.listen(8080, () => {
     console.log('Server is running on port 8080');
   });
+
+  //Login_Por_Formulario
+  

@@ -30,10 +30,15 @@
         }
 
         img {
-            max-width: 100%;
+            max-width: 50%;
             height: auto;
             display: block;
             margin: 10px auto;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
         }
 
         .addToCartButton {
@@ -49,15 +54,27 @@
             cursor: pointer;
             border-radius: 4px;
         }
+        
 
         .addToCartButton:hover {
             background-color: #0056b3;
         }
+        
+        #logoutButton {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        }
     </style>
 </head>
 <body>
-    <a id="carritoLink" href="#">Carrito</a>
-    <a href="/products">Volver a lista de productos</a>
+    <div>
+  <a href="/products">Volver a lista de productos</a>
+</div>
+    <div>
+  <a id="carritoLink" href="#">Carrito</a>
+</div>
+
     <h1>{{title}}</h1>
     <p>Descripcion: {{description}}</p>
     <p>Precio: {{price}}</p>
@@ -72,10 +89,10 @@
         {{/each}}
     </ul>
     <button class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">Agregar al carrito</button>
-    
+    <a id="logoutButton" href="/logout">Desconectarse</a>
 </body>
 </html>
 
 <script src="/socket.io/socket.io.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/socket.io-client/dist/socket.io.js"></script>
-<script type="module" src="/indexProducts.js"></script>
+<script type="module" src="/js/indexProducts.js"></script>

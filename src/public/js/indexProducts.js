@@ -71,9 +71,12 @@ socket.on('newClientConnected', async() => {
           const emailElement = document.getElementById('userEmail');
           const ageElement = document.getElementById('userAge');
           const userElement = document.getElementById('userRole');
+          const checkIcon = document.createElement('i');
+          checkIcon.classList.add('fas', 'fa-check');
           if(userData.email==='adminCoder@coder.com'){
             emailElement.textContent = userData.email;
             userElement.textContent = userData.role;
+            userElement.appendChild(checkIcon);
             nameElement.textContent = 'No existente';
             ageElement.textContent = 'No existente';
           } else {

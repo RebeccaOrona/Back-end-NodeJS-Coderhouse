@@ -6,6 +6,7 @@
 <head>
     <title>List of Products</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,14 +87,14 @@
     </div>
   </div>
 </div>
-  <h1>List of Products</h1>
+  <h1>Lista de productos</h1>
   
   <ul>
     {{#each products.docs}}
     <li>
       <h3>{{this.title}}</h3>
-      <p>Price: {{this.price}}</p>
-      <p>Category: {{this.category}}</p>
+      <p>Precio: {{this.price}}</p>
+      <p>Categoria: {{this.category}}</p>
       <a href="/api/products/{{this._id}}">Ver detalles</a>
       <button class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">Agregar al carrito</button>
       <!-- Logout button -->

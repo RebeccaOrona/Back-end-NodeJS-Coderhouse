@@ -3,6 +3,7 @@
 <head>
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,6 +22,7 @@
         }
 
         .login-heading {
+            color: #007BFF;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -60,6 +62,19 @@
             color: #007BFF;
             text-decoration: none;
         }
+        .reset-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .reset-link a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .github-link {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -81,10 +96,18 @@
             </div>
         </form>
         <div class="login-link">
-            <p>¿No estás registrado? <a href="/register">Regístrate aquí</a></p>
+            <p>¿No estás registradx? <a href="/register">Regístrate aquí</a></p>
+        </div>
+        <div class="github-link">
+         <a href="/api/sessions/github" class="btn btn-primary">
+            <i class="fab fa-github"></i> Entrar con Github
+         </a>
+        </div>
+        <div class="reset-link">
+        <p>¿Olvidaste tu contraseña? <a href="/resetPassword">Restáurala aquí</a></p>
         </div>
     </div>
 
-    <script src="/js/login.js"></script>
+    <script type="module" src="/js/login.js"></script>
 </body>
 </html>

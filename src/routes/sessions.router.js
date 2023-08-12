@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import userModel from '../models/Users.model.js';
+import { createHash,isValidPassword } from '../utils.js';
+import passport from 'passport';
 
 
 
@@ -17,63 +19,70 @@ sessionsRouter.get('/session', (req, res) => {
         res.send(`Usted ha visitado la pagina ${req.session.count} veces`);
     });
 
-    sessionsRouter.post('/register', async (req, res) => {
-    const { first_name, last_name, email, age, password } = req.body;
-    const exists = await userModel.findOne({ email });
-    if (exists) return res.status(400).send({ status: "error", error: "User already exists" });
-    const user = {
-        first_name,
-        last_name,
-        email,
-        age,
-        password //De momento no vamos a hashearlo, eso corresponde a la siguiente clase.
-    }
-    await userModel.create(user);
-    
-    res.status(200).send({ status: "success", message: "User registered" });
+sessionsRouter.post('/register', passport.authenticate('register', {failureRedirect:'/api/sessions/failRegister'}), async (req, res) => {
+    res.send({status:"success", message:"User registered!"})
 })
 
-sessionsRouter.post('/login', async (req, res) => {
-    
-    const { email, password } = req.body;
+sessionsRouter.get('/failRegister', async(req,res)=>{
+    console.log("Failed register");
+    res.status(400).send({ status: "error", error: "Failed register" });
+})
 
-    let role = 'usuario';
-    
-    if (email === 'adminCoder@coder.com' && password === 'adminCod3r123') {
-        role = 'admin';
-        req.session.user = {
-            email: email,
-            role: role
-        }
-        
-    } else {
-    
-    
-    
-    // check if user exists
-    const user = await userModel.findOne({ email });
-    console.log(user)
-
-    if (!user) return res.status(400).send({ status: "error", error: "User does not exists" });
-
-    // check if password is correct
-
-    if (user.password !== password) {
-        return res.status(400).send({ status: "error", error: "User exists but password is incorrect" });
-    }
-
+sessionsRouter.post('/login', passport.authenticate('login', {failureRedirect:'/api/sessions/failLogin'}), async (req, res) => {
+    if(!req.user) return res.status(400).send({status:"error",error:"Invalid credentials"});
     req.session.user = {
-        name: `${user.first_name} ${user.last_name}`,
-        email: user.email,
-        age: user.age,
-        role: role
+        name: `${req.user.first_name} ${req.user.last_name}`,
+        age: req.user.age,
+        email: req.user.email,
+        role: req.user.role
     }
-}
-    res.send({ status: "success", payload: req.session.user, message: "¡Logueo realizado! :)" });
-});
+    console.log(req.session.user);
+    console.log("success");
+
+    res.send({status:"success",payload:req.user})
+})
+
+sessionsRouter.get('/failLogin', (req,res) => {
+    console.log("Failed login");
+    res.status(403).send({ status: "error", error: "Failed login" });
+})
+    
+sessionsRouter.get('/github', passport.authenticate('github',{scope:['user:email']}), async(req,res) => {})
+sessionsRouter.get('/githubcallback', passport.authenticate('github',{failureRedirect:'/login'}), async(req,res) =>{
+    req.session.user = {
+    name: `${req.user.first_name} ${req.user.last_name}`,
+    age: req.user.age,
+    email: req.user.email,
+    role: req.user.role
+    }
+    console.log(req.session.user);
+    res.redirect('/products');
+})
+
 
 sessionsRouter.get('/userData', (req, res) => {
     res.send(req.session.user);
+})
+
+sessionsRouter.put('/restartPassword', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).send({
+            status: "error",
+            error: "Incomplete Values",
+        });
+    }
+    
+    const user = await userModel.findOne({ email });
+    
+    if (!user) return res.status(404).send({ status: "error", error: "Not user found" });
+    
+    const newHashedPassword = createHash(password);
+    
+    await userModel.updateOne({ _id: user._id }, { $set: { password: newHashedPassword } });
+    
+    res.send({ status: "success", payload:"Reset successful" })
 })
 
 sessionsRouter.get('/logout', (req, res) => {

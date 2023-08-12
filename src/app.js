@@ -6,13 +6,17 @@ import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import path from 'path';
 import mongoose from 'mongoose';
+import cors from 'cors';
+import passport from 'passport';
+import local from 'passport-local';
 import handlebars from 'express-handlebars';
+import initializePassport from './config/passport.config.js';
 import __dirname from './utils.js';
 import viewsRouter from './routes/views.router.js';
 import productsRouter from './routes/products.routes.js';
 import cartsRouter from './routes/carts.routes.js';
 import sessionsRouter from './routes/sessions.router.js';
-import cors from 'cors';
+
 
 
 const mongoUrl = 'mongodb+srv://becca:123@coderhousebackend.gbvr1iq.mongodb.net/?retryWrites=true&w=majority';
@@ -40,6 +44,10 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 const baseURL = 'http://localhost:8080';
 const api = axios.create({
   baseURL: baseURL,

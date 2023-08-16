@@ -6,7 +6,7 @@ function logout() {
         if (result.status === 200) {
           // Logout was successful, redirect to the login page
           setTimeout(() => {
-            window.location.replace('/login');
+            window.location.replace('/');
           }, 3000); // Redirect after 3 seconds
         }
       })

@@ -12,9 +12,9 @@ form.addEventListener('submit',e=>{
         headers:{
             'Content-Type':'application/json'
         }
-    }).then(result=>{
+    }).then(result=> {
         if(result.status===200){
-            window.location.replace('/login');
+            window.location.replace('/');
         } else if (result.status === 400) {
             sweetalert2.fire({
                 icon: 'error',

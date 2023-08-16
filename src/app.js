@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import passport from 'passport';
 import local from 'passport-local';
+import cookieParser from 'cookie-parser';
 import handlebars from 'express-handlebars';
 import initializePassport from './config/passport.config.js';
 import __dirname from './utils.js';
@@ -33,20 +34,9 @@ app.use(cors({
   methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']}
   ));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/public'))
-app.use(session({
-    store: new MongoStore({
-        mongoUrl: mongoUrl,
-        mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
-        ttl: 3600
-    }),
-    secret: "CoderSecretSHHHHH",
-    resave: true,
-    saveUninitialized: true
-}))
-initializePassport();
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(express.static(__dirname + '/public'));
+
+
 
 const baseURL = 'http://localhost:8080';
 const api = axios.create({
@@ -65,6 +55,21 @@ app.engine(
   );
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
+app.use(cookieParser());
+initializePassport();
+
+app.use(passport.initialize());
+// app.use(session({
+//   store: new MongoStore({
+//       mongoUrl: mongoUrl,
+//       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
+//       ttl: 3600
+//   }),
+//   secret: "CoderSecret",
+//   resave: true,
+//   saveUninitialized: true
+// }));
+// app.use(passport.session());
 
 // Configurar el servidor de Socket.io
 io.on('connection', async socket => {
@@ -123,14 +128,6 @@ io.on('connection', async socket => {
       socket.on('userData', (userData) => {
         console.log(userData);
       });
-    //   // Event listener for 'getUserData' event from the client
-    //   socket.on('getUserData', (acknowledgmentCallback) => {
-    //   // Get the userData from cache (or wherever you stored it)
-    //   const userData = cache.get('userData');
-    
-    //   // Send the userData back to the client as acknowledgment
-    //   acknowledgmentCallback(userData);
-    // });
   
     socket.on('disconnect', () => {
       console.log('Client disconnected');
@@ -152,5 +149,4 @@ httpServer.listen(8080, () => {
     console.log('Server is running on port 8080');
   });
 
-  //Login_Por_Formulario
   

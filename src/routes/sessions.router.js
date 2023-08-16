@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import userModel from '../models/Users.model.js';
-import { createHash,isValidPassword } from '../utils.js';
+import { authToken, authorization, createHash,isValidPassword, passportCall } from '../utils.js';
 import passport from 'passport';
 
 
@@ -28,19 +28,20 @@ sessionsRouter.get('/failRegister', async(req,res)=>{
     res.status(400).send({ status: "error", error: "Failed register" });
 })
 
-sessionsRouter.post('/login', passport.authenticate('login', {failureRedirect:'/api/sessions/failLogin'}), async (req, res) => {
+sessionsRouter.post('/login', passport.authenticate('login', {failureRedirect:'/api/sessions/failLogin', session: false}), async (req, res) => {
     if(!req.user) return res.status(400).send({status:"error",error:"Invalid credentials"});
-    req.session.user = {
+    req.user = {
         name: `${req.user.first_name} ${req.user.last_name}`,
         age: req.user.age,
         email: req.user.email,
         role: req.user.role
     }
-    console.log(req.session.user);
+    console.log(req.user);
     console.log("success");
 
     res.send({status:"success",payload:req.user})
 })
+
 
 sessionsRouter.get('/failLogin', (req,res) => {
     console.log("Failed login");
@@ -59,9 +60,23 @@ sessionsRouter.get('/githubcallback', passport.authenticate('github',{failureRed
     res.redirect('/products');
 })
 
+sessionsRouter.get('/current', passport.authenticate('jwt', { session: false }), (req,res) =>{
+    res.send({status:"success", payload:req.user});
+})
+
+sessionsRouter.get('/current2', passportCall('jwt'), authorization("usuario"), (req,res) =>{
+    req.user = {
+        name: `${req.user.user.first_name} ${req.user.user.last_name}`,
+        age: req.user.user.age,
+        email: req.user.user.email,
+        role: req.user.user.role
+    }
+    console.log(req.user);
+    res.send({status:"success", payload:req.user});
+})
 
 sessionsRouter.get('/userData', (req, res) => {
-    res.send(req.session.user);
+    res.send(req.user);
 })
 
 sessionsRouter.put('/restartPassword', async (req, res) => {
@@ -86,11 +101,11 @@ sessionsRouter.put('/restartPassword', async (req, res) => {
 })
 
 sessionsRouter.get('/logout', (req, res) => {
-    req.session.destroy( err => {
-        if(!err)
+    // req.session.destroy( err => {
+    //     if(!err)
             res.status(200).send({ status: 'success', message: 'Logout successful' });
-        else res.send({status: 'Logout error!', body: err});
-    })
+    //     else res.send({status: 'Logout error!', body: err});
+    // })
 });
 
 

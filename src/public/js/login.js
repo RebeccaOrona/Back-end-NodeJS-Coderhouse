@@ -15,15 +15,18 @@ form.addEventListener('submit',e=>{
             'Content-Type':'application/json'
         }
     })
-    .then(result=>{
-        if(result.status===200){
+    .then(response => response.json())  // Parse the response JSON
+    .then(result => {
+        if (result.status === "success") {
+            console.log(document.cookie);
             window.location.replace('/products');
         } else if (result.status === 403) {
-            sweetalert2.fire({
-                icon: 'error',
-                title: 'Ups...',
-                text: 'Contraseña no valida!',
-            });
-        };
+                sweetalert2.fire({
+                    icon: 'error',
+                    title: 'Ups...',
+                    text: 'Contraseña no valida!',
+                });
+            };
     })
+
 })

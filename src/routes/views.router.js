@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import productsRouter from './products.routes.js';
+import { authToken } from '../utils.js';
 
 const router = Router();
 
@@ -22,7 +23,6 @@ router.get('/profile', (req, res) => {
 router.get('/logout', (req, res) => {
   res.render('logout');
 })
-
 
 
 router.use('/products', productsRouter);

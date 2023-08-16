@@ -1,11 +1,36 @@
 import passport from 'passport';
 import local from 'passport-local';
 import userModel from '../models/Users.model.js'; 
-import { createHash,isValidPassword } from '../utils.js';
-import GitHubStrategy from 'passport-github2'
+import { createHash,isValidPassword,generateToken } from '../utils.js';
+import GitHubStrategy from 'passport-github2';
+import jwt from 'passport-jwt';
 
 const localStrategy = local.Strategy;
+const JWTStrategy = jwt.Strategy;
+const extractJwt = jwt.ExtractJwt;
+
+const cookieExtractor = (req) => {
+    let token = null;
+    if(req && req.cookies) {
+        token = req.cookies['cookieToken']
+    }
+    return token;
+}
+
 const initializePassport = () => {
+
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest:extractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey:'Coderkey',
+    }, async(jwt_payload,done) => {
+        try{
+            return done(null,jwt_payload);
+        }
+        catch(err) {
+            return done(err);
+        }
+    }))
+
     passport.use('register',new localStrategy(
         {passReqToCallback:true,usernameField:'email'}, async(req,username,password,done) => {
             const {first_name,last_name,email,age} = req.body;
@@ -23,6 +48,7 @@ const initializePassport = () => {
                     password: createHash(password)
                 }
                 let result = await userModel.create(newUser);
+                const access_token = generateToken(result);
                 return done(null,access_token);
             }catch(error){
                 return done("Error al crear el usuario: "+error);
@@ -31,14 +57,19 @@ const initializePassport = () => {
         }))
     
 
-    passport.use('login', new localStrategy({ usernameField: 'email' }, async (username, password, done) => {
+    passport.use('login', new localStrategy(
+        {passReqToCallback:true,usernameField:'email'}, async (req, username, password, done) => {
         try {
+            
             const user = await userModel.findOne({ email: username });
             if (!user) return done(null, false, { message: "User not found" });
             if (!isValidPassword(user, password)) return done(null, false);
-            return done(null, user);
+            
+            const access_token = generateToken(user, req.res);
+            done(null, access_token);
+            
         } catch (error) {
-            return done({ message: "Error logging in" });
+            done(error);
         }
     }));
 
@@ -80,8 +111,8 @@ const initializePassport = () => {
         try {
             const user = await userModel.findOne({ _id });
             return done(null, user);
-        } catch {
-            return done({ message: "Error deserializing user" });
+        } catch (error){
+            return done(error);
         }
     });
 };

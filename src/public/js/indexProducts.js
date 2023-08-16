@@ -21,25 +21,10 @@ socket.on('newClientConnected', async() => {
     console.error('Error adding to cart:', error);
   }
   });
-
-  // socket.on('userData', (userData) => {
-  //   // Escuchar el evento 'userData' enviado desde el servidor
-  //   // Obtener el elemento donde se mostrará el mensaje de bienvenida
-  //   const welcomeMessage = document.getElementById('welcomeMessage');
-  //   console.log(welcomeMessage);
-  //   console.log(userData);
-  //   if (userData) {
-  //   // Crear el mensaje de bienvenida con los datos del usuario
-  //   const message = `¡Bienvenidx, ${userData.name}! Tu correo es ${userData.email} y tienes ${userData.age} años.`;
-  //     socket.emit('userDataGotten', userData);
-  //   // Mostrar el mensaje de bienvenida en el elemento del DOM
-  //   welcomeMessage.textContent = message;
-  //   }
     
     
   // });
   document.addEventListener('DOMContentLoaded', () => {
-  // const welcomeButton = document.getElementById('welcomeButton');
     const userInfo = document.getElementById('userInfo');
 
     // Counter for page entry count
@@ -51,11 +36,25 @@ socket.on('newClientConnected', async() => {
       userInfo.style.display = 'block';
     }
 
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    // Get the Bearer token from the cookie
+    const token = getCookie('cookieToken'); // Replace 'yourCookieName' with the actual cookie name
+
 
     // Code to fetch user data and display it when the page loads
-    fetch('/api/sessions/userData') // Assuming this endpoint provides the user data
+    fetch('/api/sessions/current2', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }) // Assuming this endpoint provides the user data
       .then(response => response.json())
       .then(userData => {
+        console.log(userData);
         // Display user information if available
         if (userData) {
           showUserInfo();
@@ -74,21 +73,21 @@ socket.on('newClientConnected', async() => {
           const checkIcon = document.createElement('i');
           checkIcon.classList.add('fas', 'fa-check');
           if(userData.email==='adminCoder@coder.com'){
-            emailElement.textContent = userData.email;
-            userElement.textContent = userData.role;
+            emailElement.textContent = userData.payload.email;
+            userElement.textContent = userData.payload.role;
             userElement.appendChild(checkIcon);
             nameElement.textContent = 'No existente';
             ageElement.textContent = 'No existente';
           } else {
 
             
-          nameElement.textContent = userData.name;
+          nameElement.textContent = userData.payload.name;
             
-          emailElement.textContent = userData.email;
+          emailElement.textContent = userData.payload.email;
           
-          ageElement.textContent = userData.age;
+          ageElement.textContent = userData.payload.age;
         
-          userElement.textContent = userData.role;
+          userElement.textContent = userData.payload.role;
           }
         }
   })

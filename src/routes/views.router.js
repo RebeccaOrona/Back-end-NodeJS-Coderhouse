@@ -1,8 +1,18 @@
 import { Router } from 'express';
-import productsRouter from './products.routes.js';
-import { authToken } from '../utils.js';
+import productsRouter from './products.router.js';
+import env from '../config/enviroment.js';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import axios from 'axios';
+
+
 
 const router = Router();
+const app = express();
+app.use(cookieParser());
+const api = axios.create({
+  baseURL: env.baseUrl,
+});
 
 router.get('/register', (req, res) => {
     res.render('register');
@@ -14,11 +24,9 @@ router.get('/', (req, res) => {
     res.render('login');
 })
 
-router.get('/profile', (req, res) => {
-    res.render('profile', {
-        user: req.session.user
-    });
-})
+router.get('/profile', async(req, res) => {
+  res.render('profile')
+});
 
 router.get('/logout', (req, res) => {
   res.render('logout');

@@ -3,6 +3,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
+import env from './config/enviroment.js';
 
 
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10)); // hash
@@ -12,7 +13,7 @@ export const isValidPassword = (user, password) => bcrypt.compareSync(password, 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PRIVATE_KEY = "Coderkey"
+const PRIVATE_KEY = env.PRIVATE_KEY;
 
 export const generateToken = (user, res) =>{
     const token = jwt.sign({user}, PRIVATE_KEY, {expiresIn:'24h'});

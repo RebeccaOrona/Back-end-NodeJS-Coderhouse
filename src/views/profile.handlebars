@@ -59,6 +59,12 @@
         .profile-details p span {
             font-weight: bold;
         }
+        #userName,
+        #userEmail,
+        #userAge,
+        #userRole {
+            font-weight: normal; 
+        }
     </style>
 </head>
 <body>
@@ -69,26 +75,66 @@
             <h1>Tu perfil</h1>
         </div>
         <div class="profile-details">
-            {{#if user.name}}
-            <p><span>Nombre:</span> {{user.name}}</p>
-            {{else}}
-            <p><span>Nombre:</span> No existente</p>
-            {{/if}}
-
-            {{#if user.email}}
-            <p><span>Email:</span> {{user.email}}</p>
-            {{else}}
-            <p><span>Email:</span> No existente</p>
-            {{/if}}
-
-            {{#if user.age}}
-            <p><span>Edad:</span> {{user.age}}</p>
-            {{else}}
-            <p><span>Edad:</span> No existente</p>
-            {{/if}}
-
-            <p><span>Rol:</span> {{user.role}}</p>
+            <p><span>Nombre:</span> <span id="userName"></span></p>
+            <p><span>Email:</span> <span id="userEmail"></span></p>
+            <p><span>Edad:</span> <span id="userAge"></span></p>
+            <p><span>Rol:</span> <span id="userRole"></span></p>
         </div>
     </div>
+    <script>
+        // Function to fetch user data and populate the template
+        async function fetchUserDataAndPopulateTemplate() {
+        try {
+            // Function to get the value of a specific cookie
+            function getCookieValue(cookieName) {
+                const cookies = document.cookie.split('; ');
+                for (const cookie of cookies) {
+                    const [name, value] = cookie.split('=');
+                    if (name === cookieName) {
+                        return decodeURIComponent(value);
+                    }
+                }
+            return null; // Cookie not found
+            }
+
+            // Usage
+            const cookieTokenValue = getCookieValue('cookieToken');
+            if (cookieTokenValue !== null) {
+    // Use the cookieTokenValue
+    console.log('cookieTokenValue:', cookieTokenValue);
+} else {
+                console.log('Cookie not found');
+            }
+        
+
+            const response = await fetch('http://localhost:8080/api/sessions/currentUser', {
+                headers: {
+                    'Authorization': `Bearer ${cookieTokenValue}`
+                }
+            });
+
+            if (!response.ok) {
+                console.error('Response status:', response.status);
+                throw new Error('Failed to fetch user data');
+            }
+
+            const userDataJson = await response.json();
+            const userData = userDataJson.payload;
+            console.log(userData)
+
+            // Update template with user data
+            document.getElementById('userName').textContent = userData.name || 'No existente';
+            document.getElementById('userEmail').textContent = userData.email || 'No existente';
+            document.getElementById('userAge').textContent = userData.age || 'No existente';
+            document.getElementById('userRole').textContent = userData.role || 'No existente';
+        } catch (error) {
+            console.error('Error:', error.message);
+            // Handle the error
+        }
+    }
+
+    // Call the function to fetch and populate user data
+    fetchUserDataAndPopulateTemplate();
+</script>
 </body>
 </html>

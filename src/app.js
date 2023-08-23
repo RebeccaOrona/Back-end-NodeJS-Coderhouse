@@ -6,6 +6,7 @@ import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import path from 'path';
 import mongoose from 'mongoose';
+import env from './config/enviroment.js';
 import cors from 'cors';
 import passport from 'passport';
 import local from 'passport-local';
@@ -14,14 +15,15 @@ import handlebars from 'express-handlebars';
 import initializePassport from './config/passport.config.js';
 import __dirname from './utils.js';
 import viewsRouter from './routes/views.router.js';
-import productsRouter from './routes/products.routes.js';
-import cartsRouter from './routes/carts.routes.js';
+import productsRouter from './routes/products.router.js';
+import cartsRouter from './routes/carts.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 
 
 
-const mongoUrl = 'mongodb+srv://becca:123@coderhousebackend.gbvr1iq.mongodb.net/?retryWrites=true&w=majority';
+const mongoUrl = env.mongoUrl;
 const app = express();
+const PORT = env.port;
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 const connection = mongoose.connect(mongoUrl, {
@@ -38,9 +40,8 @@ app.use(express.static(__dirname + '/public'));
 
 
 
-const baseURL = 'http://localhost:8080';
 const api = axios.create({
-  baseURL: baseURL,
+  baseURL: env.baseUrl,
 });
 
 app.engine(
@@ -59,17 +60,20 @@ app.use(cookieParser());
 initializePassport();
 
 app.use(passport.initialize());
-// app.use(session({
-//   store: new MongoStore({
-//       mongoUrl: mongoUrl,
-//       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
-//       ttl: 3600
-//   }),
-//   secret: "CoderSecret",
-//   resave: true,
-//   saveUninitialized: true
-// }));
+app.use(session({
+  store: new MongoStore({
+      mongoUrl: mongoUrl,
+      mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
+      ttl: 3600
+  }),
+  secret: "CoderSecret",
+  resave: true,
+  saveUninitialized: true
+}));
 // app.use(passport.session());
+
+
+
 
 // Configurar el servidor de Socket.io
 io.on('connection', async socket => {
@@ -145,8 +149,8 @@ app.use('/api/carts', cartsRouter);
 // Configurar el router para /api/sessions
 app.use('/api/sessions', sessionsRouter);
 
-httpServer.listen(8080, () => {
-    console.log('Server is running on port 8080');
+httpServer.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   });
 
   

@@ -43,11 +43,11 @@ socket.on('newClientConnected', async() => {
     }
 
     // Get the Bearer token from the cookie
-    const token = getCookie('cookieToken'); // Replace 'yourCookieName' with the actual cookie name
+    const token = getCookie('cookieToken'); 
 
 
     // Code to fetch user data and display it when the page loads
-    fetch('/api/sessions/current2', {
+    fetch('/api/sessions/currentUser', {
       headers: {
         'Authorization': `Bearer ${token}`
       }

@@ -4,6 +4,7 @@ import userModel from '../models/Users.model.js';
 import { createHash,isValidPassword,generateToken } from '../utils.js';
 import GitHubStrategy from 'passport-github2';
 import jwt from 'passport-jwt';
+import env from './enviroment.js';
 
 const localStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
@@ -21,7 +22,7 @@ const initializePassport = () => {
 
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest:extractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey:'Coderkey',
+        secretOrKey:env.PRIVATE_KEY,
     }, async(jwt_payload,done) => {
         try{
             return done(null,jwt_payload);
@@ -60,7 +61,18 @@ const initializePassport = () => {
     passport.use('login', new localStrategy(
         {passReqToCallback:true,usernameField:'email'}, async (req, username, password, done) => {
         try {
-            
+            if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
+                const user = {
+                    first_name:'admin',
+                    last_name:' ',
+                    email:'adminCoder@coder.com',
+                    password:'adminCod3r123',
+                    age:0,
+                    role:'usuario'
+                }
+                const access_token = generateToken(user, req.res);
+                done(null, access_token);
+            }
             const user = await userModel.findOne({ email: username });
             if (!user) return done(null, false, { message: "User not found" });
             if (!isValidPassword(user, password)) return done(null, false);
@@ -74,10 +86,11 @@ const initializePassport = () => {
     }));
 
     passport.use('github',new GitHubStrategy({
-        clientID:"Iv1.aa9f96cbd39f0d3e",
-        clientSecret: '34db6a479de729d27a306384a3b722f26387ff18',
-        callbackURL:'http://localhost:8080/api/sessions/githubcallback'
-    }, async(accessToken, refreshToken, profile, done)=> {
+        passReqToCallback:true,
+        clientID:env.clientID,
+        clientSecret: env.clientSecret,
+        callbackURL:env.callbackURL
+    }, async(req, accessToken, refreshToken, profile, done)=> {
         try{
             console.log(profile);
             let user = await userModel.findOne({email:profile._json.email});
@@ -94,6 +107,7 @@ const initializePassport = () => {
             }
         
          else {
+            const access_token = generateToken(user, req.res);
             done(null,user);
          }
         }

@@ -50,13 +50,13 @@ sessionsRouter.get('/failLogin', (req,res) => {
     
 sessionsRouter.get('/github', passport.authenticate('github',{scope:['user:email']}), async(req,res) => {})
 sessionsRouter.get('/githubcallback', passport.authenticate('github',{failureRedirect:'/login'}), async(req,res) =>{
-    req.session.user = {
-    name: `${req.user.first_name} ${req.user.last_name}`,
+    req.user = {
+    name: `${req.user.first_name}${req.user.last_name}`,
     age: req.user.age,
     email: req.user.email,
     role: req.user.role
     }
-    console.log(req.session.user);
+    console.log(req.user);
     res.redirect('/products');
 })
 
@@ -64,7 +64,7 @@ sessionsRouter.get('/current', passport.authenticate('jwt', { session: false }),
     res.send({status:"success", payload:req.user});
 })
 
-sessionsRouter.get('/current2', passportCall('jwt'), authorization("usuario"), (req,res) =>{
+sessionsRouter.get('/currentUser', passportCall('jwt'), authorization("usuario"), (req,res) =>{
     req.user = {
         name: `${req.user.user.first_name} ${req.user.user.last_name}`,
         age: req.user.user.age,

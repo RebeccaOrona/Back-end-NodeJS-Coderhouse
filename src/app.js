@@ -9,7 +9,6 @@ import mongoose from 'mongoose';
 import env from './config/enviroment.js';
 import cors from 'cors';
 import passport from 'passport';
-import local from 'passport-local';
 import cookieParser from 'cookie-parser';
 import handlebars from 'express-handlebars';
 import initializePassport from './config/passport.config.js';
@@ -20,7 +19,7 @@ import cartsRouter from './routes/carts.router.js';
 import sessionsRouter from './routes/sessions.router.js';
 
 
-
+const sessionSecret = env.sessionSecret;
 const mongoUrl = env.mongoUrl;
 const app = express();
 const PORT = env.port;
@@ -30,7 +29,6 @@ const connection = mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-// const cache = new NodeCache();
 app.use(express.json());
 app.use(cors({
   methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']}
@@ -66,11 +64,11 @@ app.use(session({
       mongoOptions:{useNewUrlParser:true,useUnifiedTopology:true},
       ttl: 3600
   }),
-  secret: "CoderSecret",
+  secret: sessionSecret,
   resave: true,
   saveUninitialized: true
 }));
-// app.use(passport.session());
+app.use(passport.session());
 
 
 

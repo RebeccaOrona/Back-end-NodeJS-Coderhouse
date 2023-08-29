@@ -49,7 +49,7 @@ const initializePassport = () => {
                     password: createHash(password)
                 }
                 let result = await userModel.create(newUser);
-                const access_token = generateToken(result);
+                const access_token = generateToken(result,req.res);
                 return done(null,access_token);
             }catch(error){
                 return done("Error al crear el usuario: "+error);
@@ -108,7 +108,7 @@ const initializePassport = () => {
         
          else {
             const access_token = generateToken(user, req.res);
-            done(null,user);
+            done(null,access_token);
          }
         }
          catch(error){

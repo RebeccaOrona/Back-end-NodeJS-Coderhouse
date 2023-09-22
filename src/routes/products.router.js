@@ -1,20 +1,21 @@
 import express from 'express';
 import { getAllProducts, getProductById, createOne, createMany, editOne, deleteOne, getProductsPage } from '../controllers/products.controller.js';
+import { passportCall } from '../utils.js';
 
 const productsRouter = express.Router();
 
-productsRouter.get('/get', getAllProducts)
+productsRouter.get('/get', passportCall('jwt'), getAllProducts)
 
-productsRouter.get('', getProductsPage);
+productsRouter.get('', passportCall('jwt'), getProductsPage);
 
-productsRouter.get('/:pid', getProductById);
+productsRouter.get('/:pid', passportCall('jwt'), getProductById);
 
-productsRouter.post('/createOne', createOne);
+productsRouter.post('/createOne', passportCall('jwt'), createOne);
 
-productsRouter.post('/createMany', createMany)
+productsRouter.post('/createMany', passportCall('jwt'), createMany)
 
-productsRouter.put('/:pid', editOne);
+productsRouter.put('/:pid', passportCall('jwt'), editOne);
 
-productsRouter.delete('/:pid', deleteOne);
+productsRouter.delete('/:pid', passportCall('jwt'), deleteOne);
 
 export default productsRouter;

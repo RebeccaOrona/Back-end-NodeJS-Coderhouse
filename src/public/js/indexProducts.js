@@ -1,40 +1,12 @@
-import axios from 'https://cdn.jsdelivr.net/npm/axios@1.3.5/+esm';
 import sweetalert2 from 'https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/+esm'
 import socketIoClient from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.7.2/+esm'
 
 
-
 const socket = socketIoClient();
 var cartId = null;
+let purchaser = null;
+let baseUrl = 'http://localhost:8080';
 
-socket.on('newClientConnected', async() => {
-    console.log('A new client has connected');
-  try {
-    const response = await axios.post(`/api/carts`);
-    console.log(response.data)
-    cartId = response.data.cartId;
-    const carritoLink = document.getElementById('carritoLink');
-    carritoLink.href = `/api/carts/${cartId}`;
-    socket.emit('cartCreated', cartId);
-    
-  } catch (error) {
-    console.error('Error adding to cart:', error);
-  }
-  });
-    
-    
-  // });
-  document.addEventListener('DOMContentLoaded', () => {
-    const userInfo = document.getElementById('userInfo');
-
-    // Counter for page entry count
-    let entryCount = 0;
-
-    // Function to display user information
-    function showUserInfo() {
-      // Display user information section
-      userInfo.style.display = 'block';
-    }
 
     function getCookie(name) {
       const value = `; ${document.cookie}`;
@@ -42,24 +14,67 @@ socket.on('newClientConnected', async() => {
       if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
-    // Get the Bearer token from the cookie
     const token = getCookie('cookieToken'); 
 
+    socket.on('newClientConnected', async() => {
+      console.log('A new client has connected');
+      const carritoLink = document.getElementById('carritoLink');
+    try {
+      fetch('/api/users/currentUser', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }) 
+      .then(response => response.json())
+      .then(userData => {
+          
+        purchaser = userData.payload.email
+        console.log(purchaser)
+      
+        fetch(`/api/carts/findCartByPurchaser/${purchaser}`)
+        .then(response => response.json())
+        .then(cart => {
+          if(purchaser == cart.cart[0].purchaser){
+            cartId = cart.cart[0]._id;
+            console.log(cartId)
+            carritoLink.href = `/api/carts/${cartId}`;
+            socket.emit('cartCreated', cartId);
+          } else {
+            fetch('/api/carts')
+            .then(response => response.json())
+            .then(response =>{
+              console.log(response.data)
+              cartId = response.data.cartId
+              carritoLink.href = `/api/carts/${cartId}`;
+              socket.emit('cartCreated', cartId);
+            });
+          };
+        });
+      });
+           
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+    });
 
-    // Code to fetch user data and display it when the page loads
-    fetch('/api/sessions/currentUser', {
+    const userInfo = document.getElementById('userInfo');
+
+    
+    let entryCount = 0;
+
+    function showUserInfo() {
+      userInfo.style.display = 'block';
+    }
+    
+    fetch('/api/users/currentUser', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
-    }) // Assuming this endpoint provides the user data
+    }) 
       .then(response => response.json())
       .then(userData => {
-        console.log(userData);
-        // Display user information if available
         if (userData) {
           showUserInfo();
-
-          // Update the welcome message with page entry count and user information
           entryCount++;
           const welcomeMessage = document.getElementById('welcomeMessage');
           if(entryCount===1) welcomeMessage.textContent = "¡Bienvenidx a la página!"
@@ -92,45 +107,33 @@ socket.on('newClientConnected', async() => {
         }
   })
       .catch(error => console.error('Error fetching user data:', error));
-  });
-
-
-
-
-
-
-  // sweetalert2.fire({
-    //   icon: 'success',
-    //   title: 'Bienvenidx',
-    //   text: `¡Bienvenidx, ${userData.name}! Tu correo es ${userData.email} y tienes ${userData.age} años.`,
-    //   toast: true,
-    //   position: 'top-right',
-    //   showConfirmButton: false,
-    //   timer: 3000
-    // });
-  //  // Emit an event to request the userData from the server
-  //  socket.emit('getUserData', (userData) => {
-  //   // Event acknowledgment: This function will be called once the server responds with the userData
-  //   const welcomeMessage = document.getElementById('welcomeMessage');
-  //   if (userData) {
-  //     const message = `¡Bienvenidx, ${userData.name}! Tu correo es ${userData.email} y tienes ${userData.age} años.`;
-  //     welcomeMessage.textContent = message;
-  //   }
   // });
-  
-
 
 var productId = null;
 // Escuchar el evento de click del boton 'agregar al carrito'
-  document.addEventListener('click', (event) => {
+  document.addEventListener('click', async (event) => {
     console.log(event.target.classList.contains('addToCartButton'));
     if (event.target.classList.contains('addToCartButton')) {
     
       productId = event.target.getAttribute('data-productid');
       console.log("productid: "+ productId);
-
-      socket.emit('addToCart', {productId: productId, cartId: cartId} );
+      try {
+        const response = await fetch(`${baseUrl}/api/carts/${cartId}/product/${productId}`, {
+          method: 'POST',
+          credentials: 'include', // Incluir cookies  
+        });
+          
+        if (response.status === 403) {
+          new sweetalert2("No puedes agregar productos al carrito", "No eres un usuario válido", "error");
+        } else if (!response.ok) {
+          throw new Error('Request failed');
+        } else {
+          socket.emit('addToCart', {productId: productId, cartId: cartId} );
+        }
+    } catch (error) {
+      console.error('Error:', error);
     }
+}
   });
   
   // Emitir el evento 'addToCart' al servidor con el productId
@@ -145,7 +148,7 @@ var productId = null;
       showConfirmButton: false,
       timer: 3000
     });
-    alert(`Product with ID ${productId} added to cart!`);
+  
   });
   
 

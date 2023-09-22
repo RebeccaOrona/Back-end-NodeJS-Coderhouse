@@ -1,6 +1,6 @@
-import userModel from "../models/Users.model.js";
+import userModel from "../models/user.model.js";
 
-export default class SessionsDao {
+export default class UsersDao {
 
 
     async findOne(email) {

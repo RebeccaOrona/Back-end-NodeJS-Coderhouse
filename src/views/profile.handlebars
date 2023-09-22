@@ -3,6 +3,7 @@
 <head>
     <title>Tu Perfil</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -37,7 +38,7 @@
             border: none;
             cursor: pointer;
             border-radius: 4px;
-            }
+        }
 
         #productsButton:hover {
             background-color: #0056b3;
@@ -69,8 +70,12 @@
 </head>
 <body>
     <div class="container">
-        <a id="productsButton" href="/products" class="btn btn-primary">Volver a lista de productos</a>
-        <a id="logoutButton" href="/logout" class="btn btn-primary">Desconectarse</a>
+        <a id="productsButton" href="/products" class="btn btn-primary">
+            <i class="fas fa-list-ul"></i> Volver a lista de productos
+        </a>
+        <a id="logoutButton" href="/logout" class="btn btn-primary">
+            <i class="fas fa-sign-out"></i> Cerrar sesión
+        </a>
         <div class="profile-heading">
             <h1>Tu perfil</h1>
         </div>
@@ -107,7 +112,7 @@
             }
         
 
-            const response = await fetch('http://localhost:8080/api/sessions/currentUser', {
+            const response = await fetch('http://localhost:8080/api/users/currentUser', {
                 headers: {
                     'Authorization': `Bearer ${cookieTokenValue}`
                 }

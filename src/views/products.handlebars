@@ -47,6 +47,7 @@
         }
 
         .addToCartButton {
+            display: inline-block;
             background-color: #007BFF;
             color: #fff;
             padding: 8px 16px;
@@ -63,16 +64,42 @@
         position: relative;
         }
 
-        #logoutButton {
-        position: absolute;
-        top: 10px;
-        right: 10px;
+        #cart-container {
+          display: flex;
+          align-items: center;
         }
+
+        #carritoLink {
+          margin-right: 50px; 
+        }
+
+        #cart-icon {
+          color: #007BFF;
+        }
+
+        #logout-container {
+          display: flex;
+          align-items: center;
+          position: absolute;
+          top: 10px;
+          right: 10px;
+        }
+
+        #logout-icon {
+          color: #007BFF;
+        }
+        
+        
     </style>
 </head>
 <body>
 <div class="container">
-  <a id="carritoLink" href="#">Carrito</a>
+  <div id="cart-container">
+    <div id="cart-icon">
+      <i class="fas fa-shopping-cart"></i>
+    </div>
+    <a id="carritoLink" href="#">Carrito</a>
+  </div>
   <!-- Elemento para mostrar el mensaje de bienvenida -->
     <p id="welcomeMessage"></p>
    <div class="container mt-4">
@@ -83,7 +110,9 @@
       <p class="card-text"><strong>Email:</strong> <span id="userEmail"></span></p>
       <p class="card-text"><strong>Edad:</strong> <span id="userAge"></span></p>
       <p class="card-text"><strong>Rol:</strong> <span id="userRole"></span></p>
-      <a href="/profile" class="btn btn-primary">Mi perfil</a>
+      <a href="/profile" class="btn btn-primary">
+        <i class="fas fa-user"></i> Mi perfil
+      </a>
     </div>
   </div>
 </div>
@@ -96,16 +125,22 @@
       <p>Precio: {{this.price}}</p>
       <p>Categoria: {{this.category}}</p>
       <a href="/api/products/{{this._id}}">Ver detalles</a>
-      <button class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">Agregar al carrito</button>
-      <!-- Logout button -->
-        <a id="logoutButton" href="/logout">Desconectarse</a>
+      <div id="addCart-icon" class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">
+        <i class="fas fa-cart-plus"></i> Agregar al carrito
+      </div>
     </li>
     {{/each}}
   </ul>
+    <div id="logout-container">
+      <div id="logout-icon">
+        <i class="fas fa-sign-out"></i>
+      </div>
+      <a id="logoutButton" href="/logout">Cerrar sesión</a>
+    </div>
+  {{> chat}}
 </div>
 </body>
 </html>
 
 <!-- Script para escuchar eventos del botón "Agregar al carrito" y enviar datos al servidor a través de websockets -->
-{{!-- <script src="/socket.io/socket.io.js"></script> --}}
 <script type="module" src="/js/indexProducts.js"></script>

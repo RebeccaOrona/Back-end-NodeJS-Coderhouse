@@ -7,7 +7,11 @@ export default class ProductsDao {
         return products;
     }
 
-    async getAllPage(searchQuery,limit,page,sort){
+    async getAllPage(querysearch,queryvalue,limit,page,sort){
+        let searchQuery = {};
+        if (querysearch && queryvalue) {
+            searchQuery[querysearch] = queryvalue;
+        }
         const product = await productsModel.paginate( searchQuery ,{
             limit:limit ?? 10,
             page: page ?? 1,  

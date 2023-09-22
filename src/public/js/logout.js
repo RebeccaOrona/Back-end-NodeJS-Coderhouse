@@ -1,5 +1,5 @@
 function logout() {
-    fetch('/api/sessions/logout', {
+    fetch('/api/users/logout', {
       method: 'GET'
     })
       .then(result => {

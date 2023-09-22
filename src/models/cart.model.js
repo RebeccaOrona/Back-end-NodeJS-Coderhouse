@@ -14,7 +14,8 @@ products: [{
       type: Number,
       default: 1
     }
-  }]
+  }],
+purchaser: String
 })
 cartsSchema.plugin(mongoosePaginate);
 

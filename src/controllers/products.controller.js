@@ -1,35 +1,33 @@
-import { ProductsService } from "../services/products.service.js";
+import { authorization } from "../utils.js";
+import { ProductsService } from "../repositories/index.js";
 
-const productsService = new ProductsService();
-
-export const getAllProducts = async(req, res) => {
-    try{
-        let products = await productsService.getAll()
-        res.send({result:"success",payload:products});
-    }
-    catch(error){
-        console.log("Cannot get products with mongoose: "+error)
-    }
+export const getAllProducts = (req, res) => { authorization("usuario")(req,res, async() =>{
+  try{
+      let products = await ProductsService.getAll()
+      res.send({result:"success",payload:products});
+  }
+  catch(error){
+      console.log("Cannot get products with mongoose: "+error)
+  }
+});
 };
 
-export const getProductsPage = async(req,res)=>{
+export const getProductsPage = async(req, res) => {
     let { page } = req.query
   let { limit } = req.query
   let { sort } = req.query
   let { querysearch } = req.query
   let { queryvalue} = req.query
-  let searchQuery = {};
-  if (querysearch && queryvalue) {
-    searchQuery[querysearch] = queryvalue;
-  }
-  let products = await productsService.getAllPage(searchQuery,limit,page,sort);
+  
+  let products = await ProductsService.getAllPage(querysearch,queryvalue,limit,page,sort);
   res.render('products', { products })
-}
+};
 
-export const getProductById = async(req,res)=>{
+
+export const getProductById = (req, res) => { authorization("usuario")(req,res, async() =>{
     try {
         const {pid} = req.params
-        const product = await productsService.getProductById(pid)
+        const product = await ProductsService.getProductById(pid)
         if (product) {
             res.render('product-details', product.toJSON());
         } else {
@@ -38,19 +36,21 @@ export const getProductById = async(req,res)=>{
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch product' });
     }
-}
+});
+};
 
-export const createOne = async(req,res)=>{
+export const createOne = (req, res) => { authorization("admin")(req,res, async() =>{
     try {
         const newProduct = req.body;
-        const product = await productsService.create(newProduct);
+        const product = await ProductsService.create(newProduct);
         res.send({ status: "success", payload: product });
     } catch (error) {
     res.send({ status: "error", error: 'Failed to create product' });
   }
-}
+})
+};
 
-  export const createMany = async(req,res)=>{
+  export const createMany = (req, res) => { authorization("admin")(req,res, async() =>{
     let products = req.body; // Array of products
 
     if (!Array.isArray(products)) {
@@ -58,20 +58,21 @@ export const createOne = async(req,res)=>{
     }
 
     try {
-        let result = await productsService.create(products);;
+        let result = await ProductsService.create(products);;
         res.send({ status: "success", payload: result });
       } catch (error) {
         res.send({ status: "error", error: error.message });
       }
       
-  }
+  });
+};
 
-  export const editOne = async(req,res)=>{
+  export const editOne = (req, res) => { authorization("admin")(req,res, async() =>{
     try {
     const {pid} = req.params;
     const updatedProductData = req.body;
 
-    const updatedProduct = await productsService.editOne(pid, updatedProductData);
+    const updatedProduct = await ProductsService.editOne(pid, updatedProductData);
     if (updatedProduct) {
         res.send({ status: "success", payload: updatedProductData });
       } else {
@@ -80,14 +81,14 @@ export const createOne = async(req,res)=>{
     } catch (error) {
       res.status(500).json({ error: 'Failed to update product' });
     }
-  }
+  });
+};
 
 
-export const deleteOne = async(req,res)=>{
-
+export const deleteOne =  (req, res) => { authorization("admin")(req,res, async() =>{
   try {
     const {pid} = req.params;
-    const deletedProduct = await productsService.deleteOne(pid);
+    const deletedProduct = await ProductsService.deleteOne(pid);
     if (deletedProduct) {
       res.json(deletedProduct);
     } else {
@@ -96,6 +97,7 @@ export const deleteOne = async(req,res)=>{
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete product' });
   }
-}
+});
+};
 
 

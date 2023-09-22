@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>{{title}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,10 +15,15 @@
             text-align: center;
             margin-top: 20px;
         }
+        
+        h2 {
+         text-align: center;
+        }
 
         p {
             margin: 5px 0;
-        }
+            text-align: center;
+        }   
 
         ul {
             list-style: none;
@@ -69,10 +75,14 @@
 </head>
 <body>
     <div>
-  <a href="/products">Volver a lista de productos</a>
+        <a href="/products">
+            <i class="fas fa-list-ul"></i> Volver a lista de productos
+        </a>
 </div>
     <div>
-  <a id="carritoLink" href="#">Carrito</a>
+        <a id="carritoLink" href="#">
+            <i class="fas fa-shopping-cart"></i> Carrito
+        </a>
 </div>
 
     <h1>{{title}}</h1>
@@ -88,8 +98,12 @@
         <li><img src="{{this}}" alt="Imagen"></li>
         {{/each}}
     </ul>
-    <button class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">Agregar al carrito</button>
-    <a id="logoutButton" href="/logout">Desconectarse</a>
+    <button class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">
+        <i class="fas fa-cart-plus"></i> Agregar al carrito
+    </button>
+    <a id="logoutButton" href="/logout">
+        <i class="fas fa-sign-out"></i> Cerrar sesión
+    </a>
 </body>
 </html>
 

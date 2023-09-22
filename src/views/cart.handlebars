@@ -27,6 +27,7 @@
         }
 
         .cart-item {
+            display: inline-block;
             border: 1px solid #ccc;
             padding: 10px;
             margin: 10px;
@@ -61,20 +62,42 @@
             top: 10px;
             right: 10px;
         }
+        #productListButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .product-items-container {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Carrito</h1>
+        <h1><i class="fas fa-shopping-cart"></i> Carrito </h1>
+        <div data-cart-id="{{cart._id}}"></div>
+        <div class="product-items-container">
         {{#each cart.products}}
-        <div class="cart-item">
-            <h3>{{this.product.title}}</h3>
-            <p>Price: {{this.product.price}}</p>
-            <p>Quantity: {{this.quantity}}</p>
+        <div class="cart-item" id="cart-item-{{@index}}">
+            <div data-product-id={{this.product._id}}></div>
+            <h3><a href="/api/products/{{this.product._id}}">{{this.product.title}}</a></h3>
+            <p>Precio: {{this.product.price}}</p>
+            <p>Cantidad: <span class="quantity">{{this.quantity}}</span></p>
+            <button class="increment-btn" data-product-index="{{@index}}"><i class="fas fa-plus-circle"></i></button>
+            <button class="decrement-btn" data-product-index="{{@index}}"><i class="fas fa-minus-circle"></i></button>
         </div>
         {{/each}}
-        <a href="/products" class="btn">Volver a lista de productos</a>
-        <a id="logoutButton" href="/logout" class="btn">Desconectarse</a>
+        </div>
+        <button id="purchaseButton" class="btn">Comprar carrito</button>
+        <a id="productListButton" href="/products" class="btn">
+            <i class="fas fa-list-ul"></i> Volver a lista de productos
+        </a>
+        <a id="logoutButton" href="/logout" class="btn">
+            <i class="fas fa-sign-out"></i> Desconectarse
+        </a>
+        
     </div>
 </body>
 </html>
+
+<script type="module" src="/js/cart.js"></script>

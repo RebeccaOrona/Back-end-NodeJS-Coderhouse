@@ -16,7 +16,8 @@ import __dirname from './utils.js';
 import viewsRouter from './routes/views.router.js';
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
-import sessionsRouter from './routes/sessions.router.js';
+import userRouter from './routes/users.router.js';
+import chatRouter from './routes/chat.router.js'; 
 
 
 const sessionSecret = env.sessionSecret;
@@ -36,11 +37,6 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-
-
-const api = axios.create({
-  baseURL: env.baseUrl,
-});
 
 app.engine(
     'handlebars',
@@ -112,12 +108,7 @@ io.on('connection', async socket => {
       socket.on('addToCart', async (data) => {
         try {
           console.log(data);
-          const cartId = data.cartId; // Obtén el ID del carrito del usuario actual
-          console.log(cartId);
           const productId = data.productId;
-          console.log(productId);
-          // Make a POST request to add the product to the cart
-          await api.post(`/api/carts/${cartId}/product/${productId}`);
           
           // Emit the 'productAddedToCart' event to all clients
           io.emit('productAddedToCart', productId);
@@ -129,6 +120,10 @@ io.on('connection', async socket => {
     
       socket.on('userData', (userData) => {
         console.log(userData);
+      });
+
+      socket.on('chat message', (message) => {
+        io.emit('chat message', message);
       });
   
     socket.on('disconnect', () => {
@@ -144,8 +139,10 @@ app.use('/api/products', productsRouter);
 // Configurar el router para /api/carts
 app.use('/api/carts', cartsRouter);
 
-// Configurar el router para /api/sessions
-app.use('/api/sessions', sessionsRouter);
+// Configurar el router para /api/users
+app.use('/api/users', userRouter);
+
+app.use('/api/chat', chatRouter);
 
 httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

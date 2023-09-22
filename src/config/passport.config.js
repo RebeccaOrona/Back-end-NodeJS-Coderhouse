@@ -1,6 +1,6 @@
 import passport from 'passport';
 import local from 'passport-local';
-import userModel from '../models/Users.model.js'; 
+import userModel from '../models/user.model.js'; 
 import { createHash,isValidPassword,generateToken } from '../utils.js';
 import GitHubStrategy from 'passport-github2';
 import jwt from 'passport-jwt';
@@ -15,6 +15,7 @@ const cookieExtractor = (req) => {
     if(req && req.cookies) {
         token = req.cookies['cookieToken']
     }
+    console.log("token: " +token)
     return token;
 }
 
@@ -22,7 +23,9 @@ const initializePassport = () => {
 
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest:extractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey:env.PRIVATE_KEY,
+        secretOrKey:
+        // "Coderkey",
+        env.PRIVATE_KEY,
     }, async(jwt_payload,done) => {
         try{
             return done(null,jwt_payload);
@@ -61,22 +64,31 @@ const initializePassport = () => {
     passport.use('login', new localStrategy(
         {passReqToCallback:true,usernameField:'email'}, async (req, username, password, done) => {
         try {
-            if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
+            let user;
+            if (username == 'adminCoder@coder.com' && password == 'adminCod3r123') {
                 const user = {
                     first_name:'admin',
                     last_name:' ',
                     email:'adminCoder@coder.com',
                     password:'adminCod3r123',
                     age:0,
-                    role:'usuario'
+                    role:'admin'
                 }
                 const access_token = generateToken(user, req.res);
-                done(null, access_token);
+                return done(null, access_token);
+            } else {
+
+                user = await userModel.findOne({ email: username });
+
+                if (!user) {
+                    return done(null, false, { message: "User not found" });
+                }
+
+                if (!isValidPassword(user, password)) {
+                    return done(null, false);
+                }
             }
-            const user = await userModel.findOne({ email: username });
-            if (!user) return done(null, false, { message: "User not found" });
-            if (!isValidPassword(user, password)) return done(null, false);
-            
+
             const access_token = generateToken(user, req.res);
             done(null, access_token);
             

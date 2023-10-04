@@ -1,7 +1,9 @@
 import { UserService } from "../repositories/index.js";
 import passport from "passport";
-import { authorization, passportCall, createHash } from "../utils.js";
+import { createHash } from "../utils.js";
 import UserDTO from "../daos/DTOs/user.dto.js";
+import CustomError from "../services/customErrors.js";
+import { generatePasswordErrorInfo } from "../services/info.js";
 
 
 
@@ -85,6 +87,12 @@ export const restartPassword = async(req,res) =>{
     const { email, password } = req.body;
 
     if (!email || !password) {
+        CustomError.createError({
+            name:"Error en la restauracion de la contraseña",
+            cause:generatePasswordErrorInfo({email,password}),
+            message:"Los datos estan incompletos",
+            code:EErrors.INVALID_TYPES_ERROR
+        })
         return res.status(400).send({
             status: "error",
             error: "Incomplete Values",
@@ -93,7 +101,7 @@ export const restartPassword = async(req,res) =>{
     
     const user = await UserService.findOne(email);
     
-    if (!user) return res.status(404).send({ status: "error", error: "Not user found" });
+    if (!user) return res.status(404).send({ status: "error", error: "User not found" });
     
     const newHashedPassword = createHash(password);
     

@@ -3,7 +3,8 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
-import env from './config/enviroment.js';
+import env from './config-middlewares/enviroment.js';
+import { faker } from '@faker-js/faker';
 
 
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10)); // hash
@@ -58,6 +59,22 @@ export const authorization = (role) =>{
         if(req.user.user.role != role) return res.status(403).send({error:"No permissions"});
         next();
     }
+}
+
+
+export const generateProduct = () => {
+    let product = {
+        id: faker.database.mongodbObjectId(),
+        title: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        code: faker.string.alphanumeric(),
+        price: faker.commerce.price(),
+        status: faker.datatype.boolean(),
+        stock: faker.number.int({ min: 1, max: 120 }),
+        category: faker.commerce.department(),
+        thumbnail: faker.image.url()
+    }
+    return product
 }
 
 

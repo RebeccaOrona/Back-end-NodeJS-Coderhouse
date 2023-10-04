@@ -43,6 +43,7 @@ export const getCart = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch cart' });
+    console.log(error)
   }
 }
 
@@ -50,10 +51,10 @@ export const findCartByPurchaser = async (req, res) => {
   try{
     let {purchaser} = req.params;
     let cart = await CartsService.findCartByPurchaser({purchaser:purchaser});
-
     res.status(200).send({cart})
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch cart' });
+    console.log(error);
   }
 
 }
@@ -64,6 +65,7 @@ export const removeFromCart = (req, res) => { authorization("usuario")(req,res, 
       res.send(await CartsService.removeFromCart(cid,pid));
   } catch (error) {
     res.status(500).send({ status: "error", message: "Failed to delete product from cart" });
+    console.log(error)
   }
 });
 };
@@ -74,6 +76,7 @@ export const editCart = (req, res) => { authorization("admin")(req,res, async() 
     res.send(await CartsService.editCart(cid));
   } catch (error) {
     res.status(500).send({ status: "error", message: "Failed to update cart" });
+    console.log(error);
   }
 });
 };
@@ -87,13 +90,19 @@ export const editProductInCart = (req, res) => { authorization("usuario")(req,re
     res.send(await CartsService.editProductInCart( cid, pid, quantity));
   } catch (error) {
     res.status(500).send({ status: 'error', message: 'Failed to update product quantity in cart' });
+    console.log(error);
   }
 });
 };
 
 export const deleteAllProducts = async (req, res) => {
-  let { cid } = req.params;
-  res.send(await CartsService.deleteAllProducts(cid));
+  try {
+    let { cid } = req.params;
+    res.send(await CartsService.deleteAllProducts(cid));
+  } catch (error) {
+    res.send({ status: 'error', message:'Error intentando borrar todos los productos del carrito'});
+    console.log(error);
+  }
 }
 
 export const purchaseCart = async (req,res) => {
@@ -104,8 +113,8 @@ export const purchaseCart = async (req,res) => {
   res.send({status: result.status, payload: result});
 
   } catch (error) {
-    console.error('Error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
+    console.log(error);
   }
 }
 

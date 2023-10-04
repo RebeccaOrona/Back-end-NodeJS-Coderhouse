@@ -5,6 +5,9 @@ import { createHash,isValidPassword,generateToken } from '../utils.js';
 import GitHubStrategy from 'passport-github2';
 import jwt from 'passport-jwt';
 import env from './enviroment.js';
+import CustomError from '../services/customErrors.js';
+import EErrors from '../services/enums.js';
+import { generateUserErrorInfo } from '../services/info.js';
 
 const localStrategy = local.Strategy;
 const JWTStrategy = jwt.Strategy;
@@ -19,14 +22,15 @@ const cookieExtractor = (req) => {
     return token;
 }
 
+const jwtOptions = {
+    jwtFromRequest: cookieExtractor, // Use your cookieExtractor function
+    secretOrKey: env.PRIVATE_KEY,
+  };
+
 const initializePassport = () => {
 
-    passport.use('jwt', new JWTStrategy({
-        jwtFromRequest:extractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey:
-        // "Coderkey",
-        env.PRIVATE_KEY,
-    }, async(jwt_payload,done) => {
+
+    passport.use('jwt', new JWTStrategy(jwtOptions, async(jwt_payload,done) => {
         try{
             return done(null,jwt_payload);
         }
@@ -38,6 +42,26 @@ const initializePassport = () => {
     passport.use('register',new localStrategy(
         {passReqToCallback:true,usernameField:'email'}, async(req,username,password,done) => {
             const {first_name,last_name,email,age} = req.body;
+            if(!first_name || !last_name || !email || !age){
+                CustomError.createError({
+                    name:"Error en la creacion del usuario",
+                    cause:generateUserErrorInfo({first_name,last_name,email,age}),
+                    message:"Falto algun campo que rellenar",
+                    code:EErrors.INVALID_TYPES_ERROR
+                })
+                return done(null,false)
+            } else if(typeof first_name !== 'string' ||
+                typeof last_name !== 'string' ||
+                typeof email !== 'string' ||
+                typeof age !== 'number') {
+                    CustomError.createError({
+                        name:"Error en la creacion del usuario",
+                        cause:generateUserErrorInfo({first_name,last_name,email,age}),
+                        message:"Es necesario que los campos se rellenen correctamente",
+                        code:EErrors.INVALID_TYPES_ERROR
+                    })
+                    return done(null,false)
+                }
             try{
                 let user = await userModel.findOne({email:username});
                 if(user){
@@ -71,7 +95,7 @@ const initializePassport = () => {
                     last_name:' ',
                     email:'adminCoder@coder.com',
                     password:'adminCod3r123',
-                    age:0,
+                    age:999,
                     role:'admin'
                 }
                 const access_token = generateToken(user, req.res);
@@ -81,6 +105,12 @@ const initializePassport = () => {
                 user = await userModel.findOne({ email: username });
 
                 if (!user) {
+                    CustomError.createError({
+                        name:"Error en la busqueda del usuario",
+                        cause:"User not found",
+                        message:"No se logro encontrar al usuario",
+                        code:EErrors.DATABASE_ERROR
+                    })
                     return done(null, false, { message: "User not found" });
                 }
 

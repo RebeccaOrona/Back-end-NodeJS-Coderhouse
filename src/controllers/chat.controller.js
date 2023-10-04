@@ -27,7 +27,6 @@ export const sendMessage = (req, res) => { authorization("usuario")(req,res, asy
 export const findSenderMessages = async (req, res) => {
     try {
         let { sender } = req.params;
-        // let sender = req.user.user.email;
         let messages = await ChatService.getMessagesBySender(sender);
         res.send(messages)
     } catch (error) {

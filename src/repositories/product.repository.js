@@ -31,4 +31,9 @@ export default class productRepository{
     deleteOne = async(pid) => {
         return await this.dao.deleteOne(pid);
     }
+
+    getMockingProducts = async(limit) => {
+        let result = await this.dao.getMockingProducts(limit);
+        return result
+    }
 }

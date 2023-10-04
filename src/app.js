@@ -6,23 +6,26 @@ import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import path from 'path';
 import mongoose from 'mongoose';
-import env from './config/enviroment.js';
+import env from './config-middlewares/enviroment.js';
 import cors from 'cors';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import handlebars from 'express-handlebars';
-import initializePassport from './config/passport.config.js';
+import initializePassport from './config-middlewares/passport.config.js';
 import __dirname from './utils.js';
 import viewsRouter from './routes/views.router.js';
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import userRouter from './routes/users.router.js';
 import chatRouter from './routes/chat.router.js'; 
+import { getMockingProducts } from './controllers/products.controller.js';
+import errorHandler from './config-middlewares/error.index.js';
 
 
 const sessionSecret = env.sessionSecret;
 const mongoUrl = env.mongoUrl;
 const app = express();
+app.get('/mockingproducts', getMockingProducts);
 const PORT = env.port;
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
@@ -31,6 +34,7 @@ const connection = mongoose.connect(mongoUrl, {
     useUnifiedTopology: true
 })
 app.use(express.json());
+app.use(errorHandler)
 app.use(cors({
   methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']}
   ));
@@ -74,31 +78,6 @@ io.on('connection', async socket => {
     socket.emit('newClientConnected')
     
     console.log('New client connected');
-  
-    // Escuchar el evento 'newProduct' enviado por el cliente y emitir 'productCreated' a todos los clientes
-    socket.on('newProductData', async (newProductData) => {
-      // Lógica para agregar el nuevo producto a la lista
-      const createdProduct = addProduct(newProductData);
-      
-      // Verificar si se pudo agregar el producto correctamente
-      if (createdProduct) {
-        // Emitir el evento 'productCreated' a todos los clientes con el nuevo producto
-        io.emit('productCreated', await createdProduct);
-      }
-    });
-    
-    // Escuchar el evento 'productDeleted' enviado por el cliente y emitir 'productDeleted' a todos los clientes
-    socket.on('deleteProduct', (productId) => {
-      // Lógica para eliminar el producto de la lista
-      const deletedProduct = deleteProduct(productId);
-    
-    
-      // Verificar si se pudo eliminar el producto correctamente
-      if (deletedProduct) {
-        // Emitir el evento 'productDeleted' a todos los clientes con el ID del producto eliminado
-        io.emit('productDeleted', productId);
-      }
-    });
   
     socket.on('cartCreated', (cartId) => {
       console.log(cartId);

@@ -1,4 +1,8 @@
 import { productsModel } from "../models/product.model.js";
+import { generateProduct } from "../utils.js";
+import CustomError from "../services/customErrors.js";
+import EErrors from "../services/enums.js";
+import { generatePidErrorInfo } from "../services/info.js";
 
 export default class ProductsDao {
 
@@ -21,9 +25,17 @@ export default class ProductsDao {
     }
 
     async getById(pid){
-        const product = await productsModel.findById(pid);
-        return product;
-
+        try{
+            const product = await productsModel.findById(pid);
+            return product;
+        } catch (error){
+            CustomError.createError({
+                name:"Error obteniendo el producto",
+                cause:generatePidErrorInfo(pid),
+                message:"El producto no fue encontrado",
+                code:EErrors.DATABASE_ERROR
+            })
+        }
     }
 
     async create(product){
@@ -33,14 +45,47 @@ export default class ProductsDao {
 
 
     async editOne(pid, updatedProductData){
+    try{
         const updatedProduct = await productsModel.updateOne({_id:pid}, updatedProductData);
         return updatedProduct;
+    } catch (error){
+        CustomError.createError({
+            name:"Error editando el producto",
+            cause:generatePidErrorInfo(pid),
+            message:"El producto no fue encontrado",
+            code:EErrors.DATABASE_ERROR
+        })
+    }
     }
 
     async deleteOne(pid){
-        const deletedProduct = await productsModel.deleteOne({_id:pid});
-        return deletedProduct;
+        try{
+            const deletedProduct = await productsModel.deleteOne({_id:pid});
+            return deletedProduct;
+        } catch (error){
+            CustomError.createError({
+                name:"Error eliminando el producto",
+                cause:generatePidErrorInfo(pid),
+                message:"El producto no fue encontrado",
+                code:EErrors.DATABASE_ERROR
+            })
+        }
     }
 
+    async getMockingProducts(limit){
+        let mockingProducts = [];
+        console.log("Starting getMockingProducts");
+        
+        for(let i=0;i<limit;i++){
+            try {
+                
+                mockingProducts.push(generateProduct());
+            } catch (error) {
+                console.error("Error generating product:", error);
+            }
+        }
+        console.log("Finished getMockingProducts");
+        return mockingProducts;
+    }
 
 }

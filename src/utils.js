@@ -3,7 +3,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
-import env from './config-middlewares/enviroment.js';
+import env from './config-middlewares/environment.js';
 import { faker } from '@faker-js/faker';
 
 
@@ -46,7 +46,6 @@ export const passportCall = (strategy) => {
                 return res.status(401).send({error:info.messages?info.messages:info.toString()})
             }
             req.user = user;
-            console.log(req.user)
             next();
         })(req,res,next);
     }
@@ -54,9 +53,15 @@ export const passportCall = (strategy) => {
 
 export const authorization = (role) =>{
     return async(req,res,next) => {
-        console.log(req.user)
-        if(!req.user) return res.status(401).send({error:"Unauthorized"});
-        if(req.user.user.role != role) return res.status(403).send({error:"No permissions"});
+        if(!req.user) {
+            req.logger.error("Unauthorized")
+            return res.status(401).send({error:"Unauthorized"});
+            
+        }
+        if(req.user.user.role != role) {
+            req.logger.error("No permissions")
+            return res.status(403).send({error:"No permissions"});
+        }
         next();
     }
 }

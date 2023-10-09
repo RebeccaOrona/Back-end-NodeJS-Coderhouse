@@ -1,12 +1,10 @@
-import sweetalert2 from 'https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/+esm'
+import Swal from 'https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/+esm';
 import socketIoClient from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.7.2/+esm'
-
 
 const socket = socketIoClient();
 var cartId = null;
 let purchaser = null;
 let baseUrl = 'http://localhost:8080';
-
 
     function getCookie(name) {
       const value = `; ${document.cookie}`;
@@ -17,7 +15,6 @@ let baseUrl = 'http://localhost:8080';
     const token = getCookie('cookieToken'); 
 
     socket.on('newClientConnected', async() => {
-      console.log('A new client has connected');
       const carritoLink = document.getElementById('carritoLink');
     try {
       fetch('/api/users/currentUser', {
@@ -28,22 +25,19 @@ let baseUrl = 'http://localhost:8080';
       .then(response => response.json())
       .then(userData => {
           
-        purchaser = userData.payload.email
-        console.log(purchaser)
+        purchaser = userData.payload.email;
       
         fetch(`/api/carts/findCartByPurchaser/${purchaser}`)
         .then(response => response.json())
         .then(cart => {
           if(purchaser == cart.cart[0].purchaser){
             cartId = cart.cart[0]._id;
-            console.log(cartId)
             carritoLink.href = `/api/carts/${cartId}`;
             socket.emit('cartCreated', cartId);
           } else {
             fetch('/api/carts')
             .then(response => response.json())
             .then(response =>{
-              console.log(response.data)
               cartId = response.data.cartId
               carritoLink.href = `/api/carts/${cartId}`;
               socket.emit('cartCreated', cartId);
@@ -112,11 +106,9 @@ let baseUrl = 'http://localhost:8080';
 var productId = null;
 // Escuchar el evento de click del boton 'agregar al carrito'
   document.addEventListener('click', async (event) => {
-    console.log(event.target.classList.contains('addToCartButton'));
     if (event.target.classList.contains('addToCartButton')) {
     
       productId = event.target.getAttribute('data-productid');
-      console.log("productid: "+ productId);
       try {
         const response = await fetch(`${baseUrl}/api/carts/${cartId}/product/${productId}`, {
           method: 'POST',
@@ -124,7 +116,7 @@ var productId = null;
         });
           
         if (response.status === 403) {
-          new sweetalert2("No puedes agregar productos al carrito", "No eres un usuario válido", "error");
+          Swal.fire("No puedes agregar productos al carrito", "No eres un usuario válido", "error");
         } else if (!response.ok) {
           throw new Error('Request failed');
         } else {
@@ -139,7 +131,7 @@ var productId = null;
   // Emitir el evento 'addToCart' al servidor con el productId
   
   socket.on('productAddedToCart', (productId) => {
-    sweetalert2.fire({
+    Swal.fire({
       icon: 'success',
       title: 'Product Added to Cart',
       text: `Product with ID ${productId} added to cart!`,

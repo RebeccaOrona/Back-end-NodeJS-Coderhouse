@@ -5,7 +5,7 @@ import moment from "moment-timezone";
 export default class ChatDao { 
 
     async getAll() {
-        let messages = await chatModel.find().sort({ timestamp: 'asc' })
+        let messages = await chatModel.find().sort({ timestamp: 'desc' })
         return messages;
     }
 
@@ -15,11 +15,9 @@ export default class ChatDao {
             .sort({ timestamp: 'asc' }) // Sort by timestamp in ascending order
             .exec()
 
-            console.log(`Chat history for ${sender}:`, messages);
-
             return messages;
         } catch(error) {
-            console.error('Error retrieving chat history:', error);
+            req.logger.error('Error retrieving chat history:', error);
         };
     }
 

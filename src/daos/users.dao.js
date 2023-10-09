@@ -1,5 +1,6 @@
 import userModel from "../models/user.model.js";
 import CustomError from "../services/customErrors.js";
+import EErrors from "../services/enums.js";
 
 export default class UsersDao {
 
@@ -8,9 +9,9 @@ export default class UsersDao {
         let user = await userModel.findOne(email)
         if(!user){
             CustomError.createError({
-                name:"Error en la busqueda del usuario",
+                name:"Failed to find the user",
                 cause:"User not found",
-                message:"No se logro encontrar al usuario",
+                message:"User not found",
                 code:EErrors.DATABASE_ERROR
             })
         }

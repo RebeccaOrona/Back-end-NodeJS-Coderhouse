@@ -1,5 +1,5 @@
 {
-  "name": "desafio2",
+  "name": "desafiolog",
   "version": "1.0.0",
   "description": "",
   "main": "src/app.js",
@@ -27,11 +27,13 @@
     "mongoose": "^7.4.2",
     "mongoose-paginate-v2": "^1.7.31",
     "node-cache": "^5.1.2",
+    "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "socket.io": "^4.6.2",
-    "sweetalert2": "^11.7.20"
+    "sweetalert2": "^11.7.20",
+    "winston": "^3.11.0"
   }
 }

@@ -11,7 +11,7 @@ function logout() {
         }
       })
       .catch(error => {
-        console.error('Error during logout:', error);
+        req.logger.error('Error during logout:', error);
         // Handle any error that occurred during logout (optional)
       });
   }

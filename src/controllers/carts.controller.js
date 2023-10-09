@@ -10,7 +10,7 @@ export const createCart = (req, res) => { authorization("usuario")(req,res, asyn
     let result = await CartsService.createCart(cartData);
     res.send({ status: "success", cartId: result._id, payload: result });
   } catch (error) {
-    console.error("Cart creation failed:", error);
+    req.logger.error("Cart creation failed:", error);
     res.status(500).send({ status: "error", error: "Failed to create cart" });
   }
 
@@ -25,7 +25,7 @@ export const addToCart = (req, res) => { authorization("usuario")(req,res, async
     res.send({ status: "success", payload: cart });
   } catch (error) {
     res.status(500).send({ status: "error", error: 'Failed to add product to cart' });
-    console.log(error);
+    req.logger.error(error);
   }
 });
 };
@@ -43,7 +43,7 @@ export const getCart = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch cart' });
-    console.log(error)
+    req.logger.error(error)
   }
 }
 
@@ -54,7 +54,7 @@ export const findCartByPurchaser = async (req, res) => {
     res.status(200).send({cart})
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch cart' });
-    console.log(error);
+    req.logger.error(error);
   }
 
 }
@@ -65,7 +65,7 @@ export const removeFromCart = (req, res) => { authorization("usuario")(req,res, 
       res.send(await CartsService.removeFromCart(cid,pid));
   } catch (error) {
     res.status(500).send({ status: "error", message: "Failed to delete product from cart" });
-    console.log(error)
+    req.logger.error(error)
   }
 });
 };
@@ -76,7 +76,7 @@ export const editCart = (req, res) => { authorization("admin")(req,res, async() 
     res.send(await CartsService.editCart(cid));
   } catch (error) {
     res.status(500).send({ status: "error", message: "Failed to update cart" });
-    console.log(error);
+    req.logger.error(error);
   }
 });
 };
@@ -90,7 +90,7 @@ export const editProductInCart = (req, res) => { authorization("usuario")(req,re
     res.send(await CartsService.editProductInCart( cid, pid, quantity));
   } catch (error) {
     res.status(500).send({ status: 'error', message: 'Failed to update product quantity in cart' });
-    console.log(error);
+    req.logger.error(error);
   }
 });
 };
@@ -100,8 +100,8 @@ export const deleteAllProducts = async (req, res) => {
     let { cid } = req.params;
     res.send(await CartsService.deleteAllProducts(cid));
   } catch (error) {
-    res.send({ status: 'error', message:'Error intentando borrar todos los productos del carrito'});
-    console.log(error);
+    res.send({ status: 'error', message:'Failed to delete all products from the cart'});
+    req.logger.error(error);
   }
 }
 
@@ -113,8 +113,8 @@ export const purchaseCart = async (req,res) => {
   res.send({status: result.status, payload: result});
 
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
-    console.log(error);
+    res.status(500).json({ message: 'Cart not found' });
+    req.logger.error(error);
   }
 }
 

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => {
-                console.error('Fetch error:', error);
+                req.logger.error('Fetch error:', error);
             })
         });
     });
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             })
             .catch(error => {
-                console.error('Fetch error:', error);
+                req.logger.error('Fetch error:', error);
             })
     });
     });
@@ -108,21 +108,18 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(async (response) => {
-            console.log(response)
             if (response.status === 200) {
                 // Purchase was successful
-                console.log('Cart purchased successfully.');
                 await showSuccessToast();
                 window.location.replace(`${cartId}`);
             } else {
                 // Purchase failed
-                console.error('Cart purchase failed with status:', response.status);
                 await showErrorToast();
                 window.location.replace(`${cartId}`);
             }
         })
         .catch(error => {
-            console.error('Purchase error:', error);
+            req.logger.error('Purchase error:', error);
             
         });
     });

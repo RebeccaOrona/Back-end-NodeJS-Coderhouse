@@ -13,7 +13,7 @@ form.addEventListener('submit',e=>{
         }
     }).then(result=>{
         if(result.status===200){
-            console.log("Contraseña restaurada");
+            req.logger.info("Contraseña restaurada");
             window.location.replace('/login');
         }
     })

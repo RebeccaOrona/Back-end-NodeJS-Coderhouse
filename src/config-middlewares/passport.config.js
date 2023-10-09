@@ -4,7 +4,7 @@ import userModel from '../models/user.model.js';
 import { createHash,isValidPassword,generateToken } from '../utils.js';
 import GitHubStrategy from 'passport-github2';
 import jwt from 'passport-jwt';
-import env from './enviroment.js';
+import env from './environment.js';
 import CustomError from '../services/customErrors.js';
 import EErrors from '../services/enums.js';
 import { generateUserErrorInfo } from '../services/info.js';
@@ -18,7 +18,6 @@ const cookieExtractor = (req) => {
     if(req && req.cookies) {
         token = req.cookies['cookieToken']
     }
-    console.log("token: " +token)
     return token;
 }
 
@@ -65,7 +64,7 @@ const initializePassport = () => {
             try{
                 let user = await userModel.findOne({email:username});
                 if(user){
-                    console.log("User already exists");
+                    req.logger.error("User already exists");
                     return done(null,false);
                 }
                 const newUser = {
@@ -134,7 +133,6 @@ const initializePassport = () => {
         callbackURL:env.callbackURL
     }, async(req, accessToken, refreshToken, profile, done)=> {
         try{
-            console.log(profile);
             let user = await userModel.findOne({email:profile._json.email});
             if(!user) {
                 let newUser = {

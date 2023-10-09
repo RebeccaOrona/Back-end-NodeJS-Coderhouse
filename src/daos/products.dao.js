@@ -30,9 +30,9 @@ export default class ProductsDao {
             return product;
         } catch (error){
             CustomError.createError({
-                name:"Error obteniendo el producto",
+                name:"Failed getting the product",
                 cause:generatePidErrorInfo(pid),
-                message:"El producto no fue encontrado",
+                message:"Product not found",
                 code:EErrors.DATABASE_ERROR
             })
         }
@@ -50,9 +50,9 @@ export default class ProductsDao {
         return updatedProduct;
     } catch (error){
         CustomError.createError({
-            name:"Error editando el producto",
+            name:"Failed updating the product",
             cause:generatePidErrorInfo(pid),
-            message:"El producto no fue encontrado",
+            message:"Product not found",
             code:EErrors.DATABASE_ERROR
         })
     }
@@ -64,9 +64,9 @@ export default class ProductsDao {
             return deletedProduct;
         } catch (error){
             CustomError.createError({
-                name:"Error eliminando el producto",
+                name:"Failed deleting the product",
                 cause:generatePidErrorInfo(pid),
-                message:"El producto no fue encontrado",
+                message:"Product not found",
                 code:EErrors.DATABASE_ERROR
             })
         }
@@ -74,17 +74,15 @@ export default class ProductsDao {
 
     async getMockingProducts(limit){
         let mockingProducts = [];
-        console.log("Starting getMockingProducts");
         
         for(let i=0;i<limit;i++){
             try {
                 
                 mockingProducts.push(generateProduct());
             } catch (error) {
-                console.error("Error generating product:", error);
+                req.logger.error("Error generating product:", error);
             }
         }
-        console.log("Finished getMockingProducts");
         return mockingProducts;
     }
 

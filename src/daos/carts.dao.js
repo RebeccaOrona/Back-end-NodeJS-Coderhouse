@@ -16,11 +16,7 @@ export default class CartsDao {
     async addProduct(cid, pid){
         try{
         let cart = await cartsModel.findById(cid);
-        console.log(cart)
         let products = cart.products;
-        for (const product of cart.products) {
-            console.log("Product inside cart: " +product.product)
-        }
         
         const productIndex = products.findIndex((product) => product.product == pid);
         if (productIndex !== -1) {
@@ -36,9 +32,9 @@ export default class CartsDao {
         return await cart.save();
     } catch {
         CustomError.createError({
-            name:"Error agregando el producto al carrito",
+            name:"Failed to add the product to the cart",
             cause:generateCidErrorInfo(cid),
-            message:"El carrito no fue encontrado",
+            message:"Cart not found",
             code:EErrors.DATABASE_ERROR
         })
     }
@@ -64,9 +60,9 @@ export default class CartsDao {
             }
         } catch {
             CustomError.createError({
-                name:"Error eliminando el producto del carrito",
+                name:"Failed to delete the product from the cart",
                 cause:generateCidErrorInfo(cid),
-                message:"El carrito no fue encontrado",
+                message:"Cart not found",
                 code:EErrors.DATABASE_ERROR
             })
         }
@@ -81,9 +77,9 @@ export default class CartsDao {
             return('Cart updated successfully');
         } catch {
             CustomError.createError({
-                name:"Error editando el carrito",
+                name:"Failed to update the cart",
                 cause:generateCidErrorInfo(cid),
-                message:"El carrito no fue encontrado",
+                message:"Cart not found",
                 code:EErrors.DATABASE_ERROR
             })
         }
@@ -95,9 +91,9 @@ export default class CartsDao {
             return cart;
         } catch {
             CustomError.createError({
-                name:"Error mostrando el carrito",
+                name:"Failed to show the cart",
                 cause:generateCidErrorInfo(cid),
-                message:"El carrito no fue encontrado",
+                message:"Cart not found",
                 code:EErrors.DATABASE_ERROR
             })
         }
@@ -107,9 +103,9 @@ export default class CartsDao {
             const cart = await cartsModel.find(purchaser);
             if (cart.length === 0) {
                 CustomError.createError({
-                    name:"Error encontrando el carrito segun el comprador",
+                    name:"Failed to find the cart by its purchaser",
                     cause:generatePurchaserErrorInfo(purchaser),
-                    message:"El carrito no fue encontrado",
+                    message:"Cart not found",
                     code:EErrors.DATABASE_ERROR
                 })
             }
@@ -126,9 +122,9 @@ export default class CartsDao {
             return ({message:'Product quantity updated in cart', payload:await cart.save()})
         } catch {
             CustomError.createError({
-                name:"Error editando el producto del carrito",
+                name:"Failed to update the product in cart",
                 cause:generateCidErrorInfo(cid),
-                message:"El carrito no fue encontrado",
+                message:"Cart not found",
                 code:EErrors.DATABASE_ERROR
             })
         }
@@ -142,9 +138,9 @@ export default class CartsDao {
             return ({ message:'All products deleted from the cart', payload: cart})
         } catch {
             CustomError.createError({
-                name:"Error eliminando los productos del carrito",
+                name:"Failed to delete all products from the cart",
                 cause:generateCidErrorInfo(cid),
-                message:"El carrito no fue encontrado",
+                message:"Cart not found",
                 code:EErrors.DATABASE_ERROR
             })
         }
@@ -160,13 +156,11 @@ export default class CartsDao {
                 const productDocument = await ProductsService.getProductById(cartItem.product);
 
                 if (!productDocument) {
-                    console.log(`Product not found for ID: ${cartItem.product}`);
+                    req.logger.error(`Product not found for ID: ${cartItem.product}`);
                     continue; // Skip to the next product in the cart
                 }
 
                 const productStock = productDocument.stock;
-
-                console.log(`Product Stock for ${productDocument.title}: ${productStock}`);
 
                 if (cartItem.quantity > productStock) {
                 canPurchase = false;
@@ -210,9 +204,9 @@ export default class CartsDao {
             return ({status:200 ,message: 'Cart can be purchased'})
         } catch {
             CustomError.createError({
-                name:"Error comprando el carrito",
+                name:"Failed to buy the cart",
                 cause:generateCidErrorInfo(cid),
-                message:"El carrito no fue encontrado",
+                message:"Cart not found",
                 code:EErrors.DATABASE_ERROR
             })
         }

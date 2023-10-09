@@ -10,8 +10,8 @@ const env = {
     clientID: process.env.clientID,
     clientSecret: process.env.clientSecret,
     callbackURL: process.env.callbackURL,
-    sessionSecret: process.env.SESSION_SECRET
-
+    sessionSecret: process.env.SESSION_SECRET,
+    environment: process.env.NODE_ENV
 }
 
 export default env;

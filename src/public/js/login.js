@@ -18,7 +18,6 @@ form.addEventListener('submit',e=>{
     .then(response => response.json())  // Parse the response JSON
     .then(result => {
         if (result.status === "success") {
-            console.log(document.cookie);
             window.location.replace('/products');
         } else if (result.status === 403) {
                 sweetalert2.fire({

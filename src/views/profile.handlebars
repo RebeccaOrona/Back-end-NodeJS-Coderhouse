@@ -87,10 +87,9 @@
         </div>
     </div>
     <script>
-        // Function to fetch user data and populate the template
         async function fetchUserDataAndPopulateTemplate() {
         try {
-            // Function to get the value of a specific cookie
+            // Funcion para obtener el valor de una cookie en especifico
             function getCookieValue(cookieName) {
                 const cookies = document.cookie.split('; ');
                 for (const cookie of cookies) {
@@ -99,16 +98,13 @@
                         return decodeURIComponent(value);
                     }
                 }
-            return null; // Cookie not found
+            return null; // No se encontro la cookie
             }
 
             // Usage
             const cookieTokenValue = getCookieValue('cookieToken');
-            if (cookieTokenValue !== null) {
-    // Use the cookieTokenValue
-    console.log('cookieTokenValue:', cookieTokenValue);
-} else {
-                console.log('Cookie not found');
+            if (cookieTokenValue == null) {
+                console.error('Cookie not found');
             }
         
 
@@ -125,20 +121,18 @@
 
             const userDataJson = await response.json();
             const userData = userDataJson.payload;
-            console.log(userData)
 
-            // Update template with user data
+            // Actualizo los datos con la data de usuario
             document.getElementById('userName').textContent = userData.name || 'No existente';
             document.getElementById('userEmail').textContent = userData.email || 'No existente';
             document.getElementById('userAge').textContent = userData.age || 'No existente';
             document.getElementById('userRole').textContent = userData.role || 'No existente';
         } catch (error) {
             console.error('Error:', error.message);
-            // Handle the error
         }
     }
 
-    // Call the function to fetch and populate user data
+    // Llamar a la funcion para el fetch y populate de la data de usuario
     fetchUserDataAndPopulateTemplate();
 </script>
 </body>

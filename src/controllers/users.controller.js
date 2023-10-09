@@ -2,8 +2,6 @@ import { UserService } from "../repositories/index.js";
 import passport from "passport";
 import { createHash } from "../utils.js";
 import UserDTO from "../daos/DTOs/user.dto.js";
-import CustomError from "../services/customErrors.js";
-import { generatePasswordErrorInfo } from "../services/info.js";
 
 
 
@@ -15,7 +13,7 @@ export const register =  (req, res) => {
 
 
 export const failRegister = async(req,res)=>{
-    console.log("Failed register");
+    req.logger.error("Failed register");
     res.status(400).send({ status: "error", error: "Failed register" });
 }
 
@@ -37,7 +35,7 @@ export const login =  async (req, res) => {
 }
 
 export const failLogin = (req,res) => {
-    console.log("Failed login");
+    req.logger.error("Failed login");
     res.status(403).send({ status: "error", error: "Failed login" });
 }
 
@@ -87,12 +85,7 @@ export const restartPassword = async(req,res) =>{
     const { email, password } = req.body;
 
     if (!email || !password) {
-        CustomError.createError({
-            name:"Error en la restauracion de la contraseña",
-            cause:generatePasswordErrorInfo({email,password}),
-            message:"Los datos estan incompletos",
-            code:EErrors.INVALID_TYPES_ERROR
-        })
+        req.logger.error("Failed to restore password, values are incomplete")
         return res.status(400).send({
             status: "error",
             error: "Incomplete Values",
@@ -101,7 +94,10 @@ export const restartPassword = async(req,res) =>{
     
     const user = await UserService.findOne(email);
     
-    if (!user) return res.status(404).send({ status: "error", error: "User not found" });
+    if (!user) {
+        req.logger.error("User not found")
+        return res.status(404).send({ status: "error", error: "User not found" });
+    }
     
     const newHashedPassword = createHash(password);
     

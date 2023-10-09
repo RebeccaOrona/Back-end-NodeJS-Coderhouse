@@ -1,12 +1,12 @@
 import express from 'express';
 import session from 'express-session';
-import http from 'http';
+import http, { request } from 'http';
 import axios from 'axios';
 import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import path from 'path';
 import mongoose from 'mongoose';
-import env from './config-middlewares/enviroment.js';
+import env from './config-middlewares/environment.js';
 import cors from 'cors';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
@@ -20,13 +20,14 @@ import userRouter from './routes/users.router.js';
 import chatRouter from './routes/chat.router.js'; 
 import { getMockingProducts } from './controllers/products.controller.js';
 import errorHandler from './config-middlewares/error.index.js';
-
+import { addLogger, serverLogger } from './config-middlewares/logger.js';
 
 const sessionSecret = env.sessionSecret;
 const mongoUrl = env.mongoUrl;
 const app = express();
 app.get('/mockingproducts', getMockingProducts);
 const PORT = env.port;
+app.use(addLogger);
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 const connection = mongoose.connect(mongoUrl, {
@@ -34,7 +35,7 @@ const connection = mongoose.connect(mongoUrl, {
     useUnifiedTopology: true
 })
 app.use(express.json());
-app.use(errorHandler)
+app.use(errorHandler);
 app.use(cors({
   methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']}
   ));
@@ -76,29 +77,22 @@ app.use(passport.session());
 // Configurar el servidor de Socket.io
 io.on('connection', async socket => {
     socket.emit('newClientConnected')
-    
-    console.log('New client connected');
+    serverLogger.info('New client connected');
   
     socket.on('cartCreated', (cartId) => {
-      console.log(cartId);
       socket.emit('cartCreated', cartId);
     })
   
       socket.on('addToCart', async (data) => {
         try {
-          console.log(data);
           const productId = data.productId;
           
           // Emit the 'productAddedToCart' event to all clients
           io.emit('productAddedToCart', productId);
         } catch (error) {
           // Handle the error if the request fails
-          console.error('Failed to add product to cart:', error);
+          serverLogger.error('Failed to add product to cart:', error);
         }
-      });
-    
-      socket.on('userData', (userData) => {
-        console.log(userData);
       });
 
       socket.on('chat message', (message) => {
@@ -106,7 +100,7 @@ io.on('connection', async socket => {
       });
   
     socket.on('disconnect', () => {
-      console.log('Client disconnected');
+      serverLogger.info('Client disconnected');
     });
   });
 
@@ -123,8 +117,18 @@ app.use('/api/users', userRouter);
 
 app.use('/api/chat', chatRouter);
 
+app.get('/loggerTest', (req,res) => {
+  req.logger.debug('Debug!')
+  req.logger.http('Http!')
+  req.logger.info('Info!')
+  req.logger.warning('Warning!')
+  req.logger.error('Error!')
+  req.logger.fatal('Fatal!')
+  res.send({ message: 'Prueba de Logger!' });
+})
+
 httpServer.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+  serverLogger.info(`Server is running on port ${PORT}`);
+});
 
   

@@ -53,7 +53,6 @@ import sweetalert2 from 'https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/+esm'
             fetch('api/chat/')
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 const chat = data.chat;
                 chat.forEach((item) => {
                     const li = document.createElement('li');
@@ -93,22 +92,21 @@ import sweetalert2 from 'https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/+esm'
                   console.error('Error en la respuesta:', response);
               }
             })
-            .then((data) => console.log(data))
             .catch((error) => console.error('Error:', error));
+            fetch('/api/users/currentUser', {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            })
+            .then(response => response.json())
+            .then(userData => { 
+              user = userData.payload.email;
+              const li = document.createElement('li');
+              li.textContent = (`${user} dice: ` + input.message);
+              messages.appendChild(li);
+            })
+          
       })
               
-
-              fetch('/api/users/currentUser', {
-                headers: {
-                  'Authorization': `Bearer ${token}`
-                }
-              })
-              .then(response => response.json())
-              .then(userData => { 
-                user = userData.payload.email;
-                const li = document.createElement('li');
-                li.textContent = (`${user} dice: ` + input.message);
-                messages.appendChild(li);
-              })
-            
+              
      

@@ -1,7 +1,6 @@
 import express from 'express';
 import session from 'express-session';
 import http from 'http';
-import axios from 'axios';
 import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import path from 'path';

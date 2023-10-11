@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { passportCall } from '../utils.js';
-import {  register,failRegister,login,failLogin,logout,githubcallback,github,currentUser,restartPassword } from '../controllers/users.controller.js';
+import {  register,failRegister,login,failLogin,logout,githubcallback,github,currentUser,resetPassword } from '../controllers/users.controller.js';
 
 
 
@@ -21,7 +21,7 @@ userRouter.get('/githubcallback', githubcallback);
 
 userRouter.get('/currentUser', passportCall('jwt'), currentUser)
 
-userRouter.put('/restartPassword', restartPassword)
+userRouter.put('/resetPassword', resetPassword)
 
 userRouter.get('/logout', logout)
 

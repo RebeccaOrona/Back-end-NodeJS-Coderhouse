@@ -88,7 +88,7 @@ export const resetPassword = async(req,res) =>{
 
     if (!email || !password) {
         CustomError.createError({
-            name:"Error en la restauracion de la contraseña",
+            name:"Error en el restablecimiento de la contraseña",
             cause:generatePasswordErrorInfo({email,password}),
             message:"Los datos estan incompletos",
             code:EErrors.INVALID_TYPES_ERROR

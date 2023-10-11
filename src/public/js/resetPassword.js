@@ -1,11 +1,11 @@
-const form = document.getElementById('restartPasswordForm');
+const form = document.getElementById('resetPasswordForm');
 
 form.addEventListener('submit',e=>{
     e.preventDefault();
     const data = new FormData(form);
     const obj = {};
     data.forEach((value,key)=>obj[key]=value);
-    fetch('/api/users/restartPassword',{
+    fetch('/api/users/resetPassword',{
         method:'PUT',
         body:JSON.stringify(obj),
         headers:{
@@ -13,8 +13,7 @@ form.addEventListener('submit',e=>{
         }
     }).then(result=>{
         if(result.status===200){
-            console.log("Contraseña restaurada");
-            window.location.replace('/login');
+            window.location.replace('/');
         }
     })
 })

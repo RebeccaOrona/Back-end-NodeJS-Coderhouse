@@ -46,10 +46,10 @@ export const logout = async(req,res)=>{
 export const github = passport.authenticate('github', { scope: ['user:email'] });
 
 export const githubcallback = (req, res) => {
-    passport.authenticate('github', { failureRedirect: '/login' }, (authError, user) => {
+    passport.authenticate('github', { failureRedirect: '/' }, (authError, user) => {
         if (authError) {
             // Manejar el error de authentication
-            return res.redirect('/login');
+            return res.redirect('/');
         }
 
         try {
@@ -63,7 +63,7 @@ export const githubcallback = (req, res) => {
             res.redirect('/products');
         } catch (error) {
             // Manejar el error
-            res.redirect('/login');
+            res.redirect('/');
         }
     })(req, res); // Pasar el req y el res al middleware authenticate
 };
@@ -80,7 +80,7 @@ export const currentUser = async(req, res) => {
 };
 
 
-export const restartPassword = async(req,res) =>{
+export const resetPassword = async(req,res) =>{
 
     const { email, password } = req.body;
 
@@ -93,7 +93,7 @@ export const restartPassword = async(req,res) =>{
     
     const user = await UserService.findOne(email);
     
-    if (!user) return res.status(404).send({ status: "error", error: "Not user found" });
+    if (!user) return res.status(404).send({ status: "error", error: "User not found" });
     
     const newHashedPassword = createHash(password);
     

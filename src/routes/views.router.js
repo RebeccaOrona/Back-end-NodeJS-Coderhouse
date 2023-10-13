@@ -10,6 +10,14 @@ router.get('/register', (req, res) => {
 router.get('/resetPassword',(req,res)=>{
   res.render('reset-password');
 })
+router.get('/resetPasswordEmail',(req,res)=>{
+  res.render('reset-password-email');
+})
+
+router.get('/tokenExpired', (req,res) =>{
+  res.render('token-expired')
+})
+
 router.get('/', (req, res) => {
     res.render('login');
 })
@@ -21,7 +29,6 @@ router.get('/profile', (req, res) => {
 router.get('/logout', (req, res) => {
   res.render('logout');
 })
-
 
 router.use('/products', productsRouter);
   

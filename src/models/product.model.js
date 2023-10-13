@@ -8,6 +8,10 @@ title: {
     type:String, 
     require: true
 },
+owner:{
+    type:String,
+    require: true
+},
 description:{
     type:String,
     require: true

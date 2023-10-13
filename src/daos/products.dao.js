@@ -1,5 +1,4 @@
 import { productsModel } from "../models/product.model.js";
-import { generateProduct } from "../utils.js";
 import CustomError from "../services/customErrors.js";
 import EErrors from "../services/enums.js";
 import { generatePidErrorInfo } from "../services/info.js";
@@ -38,8 +37,8 @@ export default class ProductsDao {
         }
     }
 
-    async create(product){
-        const productos = await productsModel.create(product);
+    async create(productData){
+        const productos = await productsModel.create(productData);
         return productos;
     }
 
@@ -58,6 +57,25 @@ export default class ProductsDao {
     }
     }
 
+    async editOneByOwner(pid, updatedProductData, owner) {
+        try{
+            let foundProduct = await productsModel.find({_id:pid});
+            if(foundProduct[0].owner == owner){
+                let updatedProduct = await productsModel.updateOne({_id:pid}, updatedProductData);
+                return updatedProduct;
+            } else return "Failed to update the product, you are not the owner of this product";
+            
+
+        } catch (error){
+            CustomError.createError({
+                name:"Failed updating the product",
+                cause:generatePidErrorInfo(pid),
+                message:"Product not found",
+                code:EErrors.DATABASE_ERROR
+            })
+        }
+    }
+
     async deleteOne(pid){
         try{
             const deletedProduct = await productsModel.deleteOne({_id:pid});
@@ -72,18 +90,21 @@ export default class ProductsDao {
         }
     }
 
-    async getMockingProducts(limit){
-        let mockingProducts = [];
-        
-        for(let i=0;i<limit;i++){
-            try {
-                
-                mockingProducts.push(generateProduct());
-            } catch (error) {
-                req.logger.error("Error generating product:", error);
-            }
+    async deleteOneByOwner(pid,owner){
+        try{
+            let foundProduct = await productsModel.find({_id:pid});
+            if(foundProduct[0].owner == owner){
+            const deletedProduct = await productsModel.deleteOne({_id:pid});
+            return deletedProduct;
+            } else return "Failed to delete the product, you are not the owner of this product";
+        } catch (error){
+            CustomError.createError({
+                name:"Failed deleting the product",
+                cause:generatePidErrorInfo(pid),
+                message:"Product not found",
+                code:EErrors.DATABASE_ERROR
+            })
         }
-        return mockingProducts;
     }
 
 }

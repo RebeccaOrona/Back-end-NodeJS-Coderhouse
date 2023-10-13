@@ -11,4 +11,12 @@ export default class userRepository{
     updateOne = async(_id, password) => {
         return await this.dao.updateOne(_id, password);
     }
+
+    sendEmail = async(email) =>{
+        return await this.dao.sendEmail(email);
+    }
+
+    roleChange = async(uid) =>{
+        return await this.dao.roleChange(uid);
+    }
 }

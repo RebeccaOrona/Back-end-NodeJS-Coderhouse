@@ -1,7 +1,6 @@
 import express from 'express';
 import session from 'express-session';
 import http, { request } from 'http';
-import axios from 'axios';
 import MongoStore from 'connect-mongo';
 import { Server } from 'socket.io';
 import path from 'path';
@@ -18,14 +17,12 @@ import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import userRouter from './routes/users.router.js';
 import chatRouter from './routes/chat.router.js'; 
-import { getMockingProducts } from './controllers/products.controller.js';
 import errorHandler from './config-middlewares/error.index.js';
 import { addLogger, serverLogger } from './config-middlewares/logger.js';
 
 const sessionSecret = env.sessionSecret;
 const mongoUrl = env.mongoUrl;
 const app = express();
-app.get('/mockingproducts', getMockingProducts);
 const PORT = env.port;
 app.use(addLogger);
 const httpServer = http.createServer(app);
@@ -35,7 +32,7 @@ const connection = mongoose.connect(mongoUrl, {
     useUnifiedTopology: true
 })
 app.use(express.json());
-app.use(errorHandler);
+// app.use(errorHandler);
 app.use(cors({
   methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']}
   ));

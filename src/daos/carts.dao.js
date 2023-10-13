@@ -5,6 +5,7 @@ import moment from "moment-timezone";
 import CustomError from "../services/customErrors.js";
 import EErrors from "../services/enums.js";
 import { generateCidErrorInfo, generatePurchaserErrorInfo } from "../services/info.js";
+import { productsModel } from "../models/product.model.js";
 
 export default class CartsDao { 
 
@@ -15,29 +16,63 @@ export default class CartsDao {
 
     async addProduct(cid, pid){
         try{
-        let cart = await cartsModel.findById(cid);
-        let products = cart.products;
-        
-        const productIndex = products.findIndex((product) => product.product == pid);
-        if (productIndex !== -1) {
-        // Product already exists in the cart, increment its quantity by 1
-        products[productIndex].quantity += 1;
-        } else {
-        // Product does not exist in the cart, add it with quantity 1
-        products.push({
-            product: pid,
-            quantity: 1
-        });
+            let cart = await cartsModel.findById(cid);
+            let products = cart.products;
+            
+            const productIndex = products.findIndex((product) => product.product == pid);
+            if (productIndex !== -1) {
+            // Product already exists in the cart, increment its quantity by 1
+            products[productIndex].quantity += 1;
+            } else {
+            // Product does not exist in the cart, add it with quantity 1
+            products.push({
+                product: pid,
+                quantity: 1
+            });
+            }
+            return await cart.save();
+        } catch {
+            CustomError.createError({
+                name:"Failed to add the product to the cart",
+                cause:generateCidErrorInfo(cid),
+                message:"Cart not found",
+                code:EErrors.DATABASE_ERROR
+            })
         }
-        return await cart.save();
-    } catch {
-        CustomError.createError({
-            name:"Failed to add the product to the cart",
-            cause:generateCidErrorInfo(cid),
-            message:"Cart not found",
-            code:EErrors.DATABASE_ERROR
-        })
     }
+
+    async addProductPremium(cid,pid,owner){
+        try{
+            let foundProduct = await productsModel.find({_id:pid});
+            console.log(foundProduct)
+            console.log(foundProduct[0].owner)
+            if(foundProduct[0].owner == owner){
+                return "Failed to add that product to the cart, you can not add your own products"
+            } else {
+            let cart = await cartsModel.findById(cid);
+            let products = cart.products;
+            
+            const productIndex = products.findIndex((product) => product.product == pid);
+            if (productIndex !== -1) {
+            // Product already exists in the cart, increment its quantity by 1
+            products[productIndex].quantity += 1;
+            } else {
+            // Product does not exist in the cart, add it with quantity 1
+            products.push({
+                product: pid,
+                quantity: 1
+            });
+            }
+            return await cart.save();
+        }
+        } catch {
+            CustomError.createError({
+                name:"Failed to add the product to the cart",
+                cause:generateCidErrorInfo(cid),
+                message:"Cart not found",
+                code:EErrors.DATABASE_ERROR
+            })
+        }
     }
 
     async removeFromCart(cid,pid){
@@ -101,15 +136,13 @@ export default class CartsDao {
 
     async findCartByPurchaser(purchaser){
             const cart = await cartsModel.find(purchaser);
-            if (cart.length === 0) {
-                CustomError.createError({
-                    name:"Failed to find the cart by its purchaser",
-                    cause:generatePurchaserErrorInfo(purchaser),
-                    message:"Cart not found",
-                    code:EErrors.DATABASE_ERROR
-                })
+            if (cart.length > 0) {
+                return cart
+            } else {
+            let newCart = await cartsModel.create(purchaser);
+            return newCart
             }
-            return cart
+            
     }
 
     async editProductInCart(cid,pid,quantity){

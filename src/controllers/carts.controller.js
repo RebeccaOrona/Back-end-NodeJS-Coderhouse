@@ -18,11 +18,17 @@ export const createCart = (req, res) => { authorization("usuario")(req,res, asyn
 };
 
 
-export const addToCart = (req, res) => { authorization("usuario")(req,res, async() =>{
+export const addToCart = (req, res) => { authorization(["usuario","premium"])(req,res, async() =>{
   try {
     let { cid, pid } = req.params;
-    let cart = await CartsService.addProductToCart(cid,pid)
-    res.send({ status: "success", payload: cart });
+    if(req.user.user.role == "premium"){
+      let owner = req.user.user.email
+      let cart = await CartsService.addProductToCartPremium(cid,pid,owner);
+      res.send({payload: cart});
+    } else {
+      let cart = await CartsService.addProductToCart(cid,pid)
+      res.send({ status: "success", payload: cart });
+    }
   } catch (error) {
     res.status(500).send({ status: "error", error: 'Failed to add product to cart' });
     req.logger.error(error);

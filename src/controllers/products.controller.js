@@ -38,20 +38,29 @@ export const getProductById = (req, res) => { authorization("usuario")(req,res, 
 });
 };
 
-export const createOne = (req, res) => { authorization("admin")(req,res, async() =>{
+export const createOne = (req, res) => { authorization(["admin","premium"])(req,res, async() =>{
   try{
-        const newProduct = req.body;
-        const product = await ProductsService.create(newProduct);
-        res.send({ status: "success", payload: product });
-      }catch (error){
-        res.send({ status: "error", message: "No se logro crear el producto"})
-        req.logger.error(error);
-      }
+    const newProduct = req.body;
+    console.log(newProduct)
+    let owner = req.user.user.email;
+    console.log(owner)
+    if(req.user.user.role == "admin"){
+      owner = 'admin';
+    }
+    newProduct.owner = owner;
+    const product = await ProductsService.create(newProduct);
+    res.send({ status: "success", payload: product });
+  }catch (error){
+    res.send({ status: "error", message: "No se logro crear el producto"})
+    req.logger.error(error);
+  }
 })
 };
 
-  export const createMany = (req, res) => { authorization("admin")(req,res, async() =>{
-    let products = req.body; // Array of products
+  export const createMany = (req, res) => { authorization(["admin","premium"])(req,res, async() =>{
+    let products = req.body; 
+    let owner = req.user.user.email;
+    console.log(owner)
     if (!Array.isArray(products)) {
       req.logger.error("Data format incorrect, array expected")
       return res.send({ status: "error", error: "Data format incorrect" });
@@ -70,7 +79,7 @@ export const createOne = (req, res) => { authorization("admin")(req,res, async()
       }
 
     try {
-        let result = await ProductsService.create(products);;
+        let result = await ProductsService.create(owner,products);;
         res.send({ status: "success", payload: result });
       } catch (error) {
         req.logger.error(error);
@@ -80,7 +89,7 @@ export const createOne = (req, res) => { authorization("admin")(req,res, async()
   });
 };
 
-  export const editOne = (req, res) => { authorization("admin")(req,res, async() =>{
+  export const editOne = (req, res) => { authorization(["admin","premium"])(req,res, async() =>{
     try{
       const {pid} = req.params;
       const updatedProductData = req.body;
@@ -93,10 +102,16 @@ export const createOne = (req, res) => { authorization("admin")(req,res, async()
         typeof updatedProductData.category !== 'string') {
           req.logger.error("Failed updating the product, received parameters are not valid");
           res.status(404).json({error: "Invalid parameters data type" });
+      } else {
+        if(req.user.user.role=='premium'){
+          let owner = req.user.user.email
+          let result = await ProductsService.editOneByOwner(pid, updatedProductData, owner);
+          res.send({ status: "success", payload: result, updatedProductData })
         } else {
-      await ProductsService.editOne(pid, updatedProductData);
-      res.send({ status: "success", payload: updatedProductData });
+        await ProductsService.editOne(pid, updatedProductData);
+        res.send({ status: "success", payload: updatedProductData });
         }
+      }
       } catch (error){
         res.status(404).json({ error: 'Product not found' });
         req.logger.error(error)
@@ -105,11 +120,17 @@ export const createOne = (req, res) => { authorization("admin")(req,res, async()
 };
 
 
-export const deleteOne =  (req, res) => { authorization("admin")(req,res, async() =>{
+export const deleteOne =  (req, res) => { authorization(["admin","premium"])(req,res, async() =>{
   try{
     const {pid} = req.params;
+    if(req.user.user.role=='premium'){
+      let owner = req.user.user.email
+      let result = await ProductsService.deleteOneByOwner(pid, owner);
+      res.send({payload: result})
+    } else {
     const deletedProduct = await ProductsService.deleteOne(pid);
     res.json(deletedProduct);
+    }
   } catch (error){
       res.status(404).json({ error: 'Product not found' });
       req.logger.error(error)
@@ -127,5 +148,7 @@ export const getMockingProducts = async (req, res) => {
     res.status(500).send({ status: "error", message: "Internal server error" });
   }
 };
+
+
 
 

@@ -4,3 +4,17 @@
 [30mfatal[39m: Fatal!
 [31merror[39m: Error!
 [30mfatal[39m: Fatal!
+[31merror[39m: Failed login
+[31merror[39m: Cart not found {"code":3,"name":"Failed to find the cart by its purchaser"}
+[31merror[39m: Cart not found {"code":3,"name":"Failed to find the cart by its purchaser"}
+[31merror[39m: Cart not found {"code":3,"name":"Failed to find the cart by its purchaser"}
+[31merror[39m: No permissions
+[31merror[39m: No permissions
+[31merror[39m: No permissions
+[31merror[39m: Spread syntax requires ...iterable[Symbol.iterator] to be a function
+[31merror[39m: pid is not defined
+[31merror[39m: Cannot read properties of null (reading '0')
+[31merror[39m: Cannot read properties of null (reading 'email')
+[31merror[39m: Failed to reset password, the new password can't be the same as the old one
+[31merror[39m: Failed to reset password, values are incomplete
+[31merror[39m: Failed to reset password, the new password can't be the same as the old one

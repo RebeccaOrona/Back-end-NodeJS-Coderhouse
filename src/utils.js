@@ -4,12 +4,12 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import env from './config-middlewares/environment.js';
-import { faker } from '@faker-js/faker';
-
+import nodemailer from 'nodemailer'
 
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10)); // hash
 
 export const isValidPassword = (user, password) => bcrypt.compareSync(password, user.password); // true/false
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -51,36 +51,26 @@ export const passportCall = (strategy) => {
     }
 }
 
-export const authorization = (role) =>{
+export const authorization = (allowedRoles) =>{
     return async(req,res,next) => {
-        if(!req.user) {
-            req.logger.error("Unauthorized")
-            return res.status(401).send({error:"Unauthorized"});
-            
-        }
-        if(req.user.user.role != role) {
-            req.logger.error("No permissions")
-            return res.status(403).send({error:"No permissions"});
-        }
+        const userRole = req.user.user.role;
+
+        if (allowedRoles.includes(userRole)) {
         next();
-    }
+        } else {
+        res.status(403).send({ status: "error", message: "Unauthorized" });
+        }
+    };
+        
 }
 
-
-export const generateProduct = () => {
-    let product = {
-        id: faker.database.mongodbObjectId(),
-        title: faker.commerce.productName(),
-        description: faker.commerce.productDescription(),
-        code: faker.string.alphanumeric(),
-        price: faker.commerce.price(),
-        status: faker.datatype.boolean(),
-        stock: faker.number.int({ min: 1, max: 120 }),
-        category: faker.commerce.department(),
-        thumbnail: faker.image.url()
+export const transport = nodemailer.createTransport({
+    service:env.email_service,
+    port: env.email_port,
+    auth:{
+        user:env.email_user,
+        pass:env.email_pass
     }
-    return product
-}
-
+})
 
 export default __dirname;

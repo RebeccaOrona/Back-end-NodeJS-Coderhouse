@@ -28,12 +28,16 @@ export default class productRepository{
         return await this.dao.editOne(pid, updatedProductData);
     }
 
+    editOneByOwner = async(pid, updatedProductData, owner) =>{
+        return await this.dao.editOneByOwner(pid, updatedProductData, owner);
+    }
+
     deleteOne = async(pid) => {
         return await this.dao.deleteOne(pid);
     }
 
-    getMockingProducts = async(limit) => {
-        let result = await this.dao.getMockingProducts(limit);
-        return result
+    deleteOneByOwner = async(pid, owner) =>{
+        return await this.dao.deleteOneByOwner(pid, owner);
     }
+
 }

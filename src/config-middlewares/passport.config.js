@@ -41,6 +41,7 @@ const initializePassport = () => {
     passport.use('register',new localStrategy(
         {passReqToCallback:true,usernameField:'email'}, async(req,username,password,done) => {
             const {first_name,last_name,email,age} = req.body;
+            
             if(!first_name || !last_name || !email || !age){
                 CustomError.createError({
                     name:"Error en la creacion del usuario",
@@ -52,7 +53,7 @@ const initializePassport = () => {
             } else if(typeof first_name !== 'string' ||
                 typeof last_name !== 'string' ||
                 typeof email !== 'string' ||
-                typeof age !== 'number') {
+                typeof age !== 'string') {
                     CustomError.createError({
                         name:"Error en la creacion del usuario",
                         cause:generateUserErrorInfo({first_name,last_name,email,age}),

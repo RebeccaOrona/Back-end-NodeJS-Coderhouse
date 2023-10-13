@@ -20,6 +20,10 @@ export default class cartRepository{
         return await this.dao.addProduct(cip,pid);
     }
 
+    async addProductToCartPremium(cip,pid,owner) {
+        return await this.dao.addProductPremium(cip,pid,owner);
+    }
+
     async removeFromCart(cid,pid) {
         return await this.dao.removeFromCart(cid,pid);
     }

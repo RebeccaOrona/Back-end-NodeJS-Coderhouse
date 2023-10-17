@@ -19,7 +19,7 @@ form.addEventListener('submit',e=>{
     .then(result => {
         if (result.status === "success") {
             window.location.replace('/products');
-        } else if (result.status == "error") {
+        } else if (result.status === 403) {
                 sweetalert2.fire({
                     icon: 'error',
                     title: 'Ups...',

@@ -1,7 +1,7 @@
 import { authorization } from "../utils.js";
 import { CartsService } from "../repositories/index.js";
 
-export const createCart = (req, res) => { authorization("usuario")(req,res, async() =>{
+export const createCart = (req, res) => { authorization(["usuario","premium"])(req,res, async() =>{
   try {
     const userEmail = req.user.user.email;
     const cartData = {

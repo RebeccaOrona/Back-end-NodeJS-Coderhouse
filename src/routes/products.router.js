@@ -12,7 +12,7 @@ productsRouter.get('/:pid', passportCall('jwt'), getProductById);
 
 productsRouter.post('/createOne', passportCall('jwt'), createOne);
 
-productsRouter.post('/createMany', passportCall('jwt'), createMany)
+productsRouter.post('/createMany', passportCall('jwt'), createMany);
 
 productsRouter.put('/:pid', passportCall('jwt'), editOne);
 

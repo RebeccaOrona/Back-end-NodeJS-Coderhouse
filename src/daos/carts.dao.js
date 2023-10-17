@@ -4,7 +4,7 @@ import TicketDTO from "../daos/DTOs/ticket.dto.js";
 import moment from "moment-timezone";
 import CustomError from "../services/customErrors.js";
 import EErrors from "../services/enums.js";
-import { generateCidErrorInfo, generatePurchaserErrorInfo } from "../services/info.js";
+import { generateCidErrorInfo } from "../services/info.js";
 import { productsModel } from "../models/product.model.js";
 
 export default class CartsDao { 

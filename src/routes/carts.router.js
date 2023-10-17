@@ -6,11 +6,11 @@ const cartsRouter = express.Router();
 
 cartsRouter.post('/', passportCall('jwt'), createCart);
 
-cartsRouter.get('/findCartByPurchaser/:purchaser', findCartByPurchaser);
-
 cartsRouter.post('/:cid/product/:pid', passportCall('jwt'), addToCart);
 
 cartsRouter.get('/:cid', getCart);
+
+cartsRouter.get('/findCartByPurchaser/:purchaser', findCartByPurchaser);
 
 cartsRouter.delete('/:cid/product/:pid', passportCall('jwt'), removeFromCart);
 

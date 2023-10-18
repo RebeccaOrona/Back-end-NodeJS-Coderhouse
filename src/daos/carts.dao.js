@@ -103,10 +103,9 @@ export default class CartsDao {
         }
     }
 
-    async editCart(cid){
+    async editCart(cid, products){
         try{
             let cart = await cartsModel.findById(cid);
-            let products = req.body;
             cart.products = products;
             await cart.save();
             return('Cart updated successfully');
@@ -140,7 +139,7 @@ export default class CartsDao {
                 return cart
             } else {
             let newCart = await cartsModel.create(purchaser);
-            return newCart
+            return ({message:"Cart not found, created a new one: ", newCart})
             }
             
     }

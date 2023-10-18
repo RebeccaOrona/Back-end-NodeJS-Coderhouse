@@ -28,8 +28,8 @@ export default class cartRepository{
         return await this.dao.removeFromCart(cid,pid);
     }
 
-    async editCart(cid){
-        return await this.dao.editCart(cid);
+    async editCart(cid,products){
+        return await this.dao.editCart(cid,products);
     }
 
     async editProductInCart(cid,pid,quantity){

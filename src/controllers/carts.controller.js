@@ -79,7 +79,8 @@ export const removeFromCart = (req, res) => { authorization("usuario")(req,res, 
 export const editCart = (req, res) => { authorization("admin")(req,res, async() =>{
   try {
     let { cid } = req.params;
-    res.send(await CartsService.editCart(cid));
+    let products = req.body;
+    res.send(await CartsService.editCart(cid,products));
   } catch (error) {
     res.status(500).send({ status: "error", message: "Failed to update cart" });
     req.logger.error(error);

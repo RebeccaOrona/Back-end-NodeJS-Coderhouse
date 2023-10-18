@@ -27,7 +27,7 @@ paths:
       parameters:
         - name: cid
           in: path
-          description: Id del carrito a actualizar
+          description: Id del carrito a obtener
           required: true
           schema:
             $type: string
@@ -37,9 +37,43 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#components/schemas/Cart"
+                type: object
+                properties:
+                  cart:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          description: Id del carrito
+                        purchaser:
+                          type: string
+                          description: Email del comprador
+                        products:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              product:
+                                type: string
+                                description: Id del producto en el carrito
+                              quantity:
+                                type: integer
+                                description: Cantidad del producto en el carrito
+                        __v:
+                          type: integer
+                          description: Versión del documento
+              example:
+                cart:
+                  - 
+                    _id: "65010f0f3078b5875ddf3b33"
+                    purchaser: "peope@gmail.com"
+                    products:
+                      - 
+                        product: "6529913972fdfabe15585a3a"
+                        quantity: 1
+                    __v: 41
         "500":
           description: Error interno del servidor...
     put:
@@ -67,9 +101,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#components/schemas/Cart"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de la respuesta
+              example:
+                message: "Cart updated successfully"  
         "500":
           description: Error interno del servidor...
     delete:
@@ -91,9 +129,41 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#components/schemas/Cart"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de la respuesta
+                  payload:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Id del carrito
+                      purchaser:
+                        type: string
+                        description: Email del comprador
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            quantity:
+                              type: integer
+                              description: Cantidad del producto en el carrito
+                            product:
+                              type: string
+                              description: Id del producto en el carrito
+                      __v:
+                        type: integer
+                        description: Versión del documento
+              example:
+                message: "All products deleted from the cart"
+                payload:
+                  _id: "65010f0f3078b5875ddf3b33"
+                  purchaser: "peope@gmail.com"
+                  products: []
+                  __v: 42
         "500":
           description: Error interno del servidor...
   /api/carts/{cid}/purchase:
@@ -116,9 +186,25 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#components/schemas/Cart"
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    description: El código de estado de la respuesta
+                  payload:
+                    type: object
+                    properties:
+                      status:
+                        type: integer
+                        description: El código de estado en la carga útil
+                      message:
+                        type: string
+                        description: El mensaje de la respuesta
+              example:
+                status: 200
+                payload:
+                  status: 200
+                  message: Cart can be purchased
         "500":
           description: Error interno del servidor...
   /api/carts/{cid}/product/{pid}:
@@ -141,15 +227,60 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: integer
+                  description: Cantidad a enviar  
       responses:
         "200":
           description: La cantidad del producto fue modificada correctamente
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#components/schemas/Cart"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de la respuesta
+                  payload:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Id del carrito
+                      purchaser:
+                        type: string
+                        description: Email del comprador
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            quantity:
+                              type: integer
+                              description: Cantidad del producto en el carrito
+                            product:
+                              type: string
+                              description: Id del producto en el carrito
+                      __v:
+                        type: integer
+                        description: Versión del documento
+              example:
+                message: "Product quantity updated in cart"
+                payload:
+                  _id: "65010f0f3078b5875ddf3b33"
+                  purchaser: "peope@gmail.com"
+                  products:
+                    - 
+                      quantity: 1
+                      product: "6529913972fdfabe15585a3a"
+                  __v: 41
         "500":
           description: Error interno del servidor...
     delete:
@@ -161,7 +292,7 @@ paths:
       parameters:
         - name: cid
           in: path
-          description: Id del carrito a eliminar
+          description: Id del carrito
           required: true
           schema:
             type: string
@@ -177,9 +308,44 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#components/schemas/Cart"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de la respuesta
+                  payload:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Id del carrito
+                      purchaser:
+                        type: string
+                        description: Email del comprador
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product:
+                              type: string
+                              description: Id del producto en el carrito
+                            quantity:
+                              type: integer
+                              description: Cantidad del producto en el carrito
+                      __v:
+                        type: integer
+                        description: Versión del documento
+              example:
+                message: "Product subtracted from cart"
+                payload:
+                  _id: "65010f0f3078b5875ddf3b33"
+                  purchaser: "peope@gmail.com"
+                  products:
+                    - 
+                      product: "6529913972fdfabe15585a3a"
+                      quantity: 1
+                  __v: 41
         "500":
           description: Error interno del servidor...
     post:
@@ -207,9 +373,44 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#components/schemas/Cart"
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Estado de la respuesta
+                  payload:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                        description: Id del carrito
+                      purchaser:
+                        type: string
+                        description: Email del comprador
+                      products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product:
+                              type: string
+                              description: Id del producto en el carrito
+                            quantity:
+                              type: integer
+                              description: Cantidad del producto en el carrito
+                      __v:
+                        type: integer
+                        description: Versión del documento
+              example:
+                status: "success"
+                payload:
+                  _id: "65010f0f3078b5875ddf3b33"
+                  purchaser: "peope@gmail.com"
+                  products:
+                    - 
+                      product: "6529913972fdfabe15585a3a"
+                      quantity: 2
+                  __v: 41
         "500":
           description: Error interno del servidor...
   /api/carts/findCartByPurchaser/{purchaser}:
@@ -232,9 +433,43 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#components/schemas/Cart"
+                type: object
+                properties:
+                  cart:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          description: Id del carrito
+                        purchaser:
+                          type: string
+                          description: Email del comprador
+                        products:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              product:
+                                type: string
+                                description: Id del producto en el carrito
+                              quantity:
+                                type: integer
+                                description: Cantidad del producto en el carrito
+                        __v:
+                          type: integer
+                          description: Versión del documento
+              example:
+                cart:
+                  - 
+                    _id: "65010f0f3078b5875ddf3b33"
+                    purchaser: "peope@gmail.com"
+                    products:
+                      - 
+                        product: "6529913972fdfabe15585a3a"
+                        quantity: 1
+                    __v: 41
         "500":
           description: Error interno del servidor...
 
@@ -271,15 +506,11 @@ components:
             product: "5fe8689c4c0db356847d6e2f"
             quantity: 1
         purchaser: "correo@ejemplo.com"
+    
   requestBodies:
     updateCart:
       type: object
       properties:
-        _id: 
-          type: string
-          description: Id autogenerado de MongoDB
-        products:
-          type: array
           items:
             type: object
             properties:
@@ -290,16 +521,12 @@ components:
                 type: integer
                 description: Cantidad del producto en el carrito
           description: Listado de los productos en el carrito
-        purchaser:
-          type: string
-          description: Email del comprador
       example: 
-        _id: "5fe8689c4c0db356847d6e2d"
-        products:
           - 
             product: "5fe8689c4c0db356847d6e2e"
             quantity: 3
           - 
             product: "5fe8689c4c0db356847d6e2f"
             quantity: 1
-        purchaser: "correo@ejemplo.com"
+
+            

@@ -1,4 +1,4 @@
-import { authorization } from "../utils.js";
+import authorization from "../config-middlewares/authorization.js";
 import { CartsService } from "../repositories/index.js";
 
 export const createCart = (req, res) => { authorization(["usuario","premium"])(req,res, async() =>{

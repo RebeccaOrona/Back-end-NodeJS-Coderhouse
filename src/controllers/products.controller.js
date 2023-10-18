@@ -1,4 +1,4 @@
-import { authorization } from "../utils.js";
+import authorization from "../config-middlewares/authorization.js";
 import { ProductsService } from "../repositories/index.js";
 
 export const getAllProducts = (req, res) => { authorization("usuario")(req,res, async() =>{

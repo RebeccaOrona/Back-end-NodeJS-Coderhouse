@@ -1,4 +1,4 @@
-import { authorization } from "../utils.js";
+import authorization from "../config-middlewares/authorization.js";
 import { ChatService } from "../repositories/index.js";
 
 export const getChat = async (req, res) => {

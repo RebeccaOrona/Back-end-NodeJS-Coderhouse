@@ -1,5 +1,5 @@
-import authorization from "../config-middlewares/authorization.js";
 import { ProductsService } from "../repositories/index.js";
+import { authorization } from "../config-middlewares/authorization.js";
 
 export const getAllProducts = (req, res) => { authorization("usuario")(req,res, async() =>{
   try{
@@ -123,9 +123,10 @@ export const createOne = (req, res) => { authorization(["admin","premium"])(req,
 export const deleteOne =  (req, res) => { authorization(["admin","premium"])(req,res, async() =>{
   try{
     const {pid} = req.params;
-    if(req.user.user.role=='premium'){
+    let role = req.user.user.role
+    if(role=='premium'){
       let owner = req.user.user.email
-      let result = await ProductsService.deleteOneByOwner(pid, owner);
+      let result = await ProductsService.deleteOneByOwner(pid,owner);
       res.send({payload: result})
     } else {
     const deletedProduct = await ProductsService.deleteOne(pid);
@@ -138,16 +139,6 @@ export const deleteOne =  (req, res) => { authorization(["admin","premium"])(req
 });
 };
 
-export const getMockingProducts = async (req, res) => {
-  try {
-    let { limit = 10 } = req.query;
-    let mockingProducts = await ProductsService.getMockingProducts(limit);
-    res.send({ status: "success", payload: mockingProducts });
-  } catch (error) {
-    req.logger.error(error);
-    res.status(500).send({ status: "error", message: "Internal server error" });
-  }
-};
 
 
 

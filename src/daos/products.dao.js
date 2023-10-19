@@ -2,6 +2,8 @@ import { productsModel } from "../models/product.model.js";
 import CustomError from "../services/customErrors.js";
 import EErrors from "../services/enums.js";
 import { generatePidErrorInfo } from "../services/info.js";
+import env from "../config-middlewares/environment.js";
+import { transport } from "../utils.js";
 
 export default class ProductsDao {
 
@@ -94,8 +96,22 @@ export default class ProductsDao {
         try{
             let foundProduct = await productsModel.find({_id:pid});
             if(foundProduct[0].owner == owner){
-            const deletedProduct = await productsModel.deleteOne({_id:pid});
-            return deletedProduct;
+                    await transport.sendMail({
+                        from:`Rebecca Orona <${env.email_user}>`,
+                        to:owner,
+                        subject:'Su producto fue eliminado',
+                        html:`
+                        <p style="color: black;">Nos comunicamos con usted para avisarle que su producto
+                        llamado ${foundProduct[0].title} acaba de ser eliminado</p>
+
+                        <p style="color: black;">Si piensa que esto puede haber sido un error por favor comuniquese con nosotros</p>
+
+                        <p style="color: black;">Comercio Blahaj</p>
+                        `,
+                        attachments:[]
+                    })
+                const deletedProduct = await productsModel.deleteOne({_id:pid});
+                return deletedProduct;
             } else return "Failed to delete the product, you are not the owner of this product";
         } catch (error){
             CustomError.createError({

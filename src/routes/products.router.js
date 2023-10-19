@@ -1,6 +1,6 @@
 import express from 'express';
 import { getAllProducts, getProductById, createOne, createMany, editOne, deleteOne, getProductsPage } from '../controllers/products.controller.js';
-import { passportCall } from '../utils.js';
+import { passportCall } from '../config-middlewares/passportCall.js';
 
 const productsRouter = express.Router();
 

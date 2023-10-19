@@ -49,7 +49,7 @@ export default class UsersDao {
     }
 
     async roleChange(uid){
-        let user = await userModel.findOne(uid);
+        let user = await userModel.findById(uid);
         if(user.role == "usuario"){
             user.role = "premium";
         } else if(user.role == "premium"){

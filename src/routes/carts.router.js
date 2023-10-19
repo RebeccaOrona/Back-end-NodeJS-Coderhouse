@@ -1,6 +1,6 @@
 import express from 'express';
 import { addToCart, createCart, deleteAllProducts, removeFromCart, editCart, editProductInCart, findCartByPurchaser, getCart, purchaseCart } from '../controllers/carts.controller.js';
-import { passportCall } from '../utils.js';
+import { passportCall } from '../config-middlewares/passportCall.js';
 
 const cartsRouter = express.Router();
 

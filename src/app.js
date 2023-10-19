@@ -19,8 +19,7 @@ import userRouter from './routes/users.router.js';
 import chatRouter from './routes/chat.router.js'; 
 import errorHandler from './config-middlewares/error.index.js';
 import { addLogger, serverLogger } from './config-middlewares/logger.js';
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUIExpress from 'swagger-ui-express';
+
 
 const sessionSecret = env.sessionSecret;
 const mongoUrl = env.mongoUrl;
@@ -103,22 +102,6 @@ io.on('connection', async socket => {
     });
   });
 
-// Swagger config
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.1',
-        info: {
-            title: 'Documentacion API Ecommerce',
-            description: 'Documentacion para uso de swagger!!'
-        }
-    },
-    apis: [`./src/docs/**/*.yaml`]
-}
-
-// Creation of specs
-const specs = swaggerJSDoc(swaggerOptions);
-// Declaring of swagger API - endpoint
-app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
 
 // Configurar el router para views
 app.use('/', viewsRouter);
@@ -142,6 +125,7 @@ app.get('/loggerTest', (req,res) => {
   req.logger.fatal('Fatal!')
   res.send({ message: 'Prueba de Logger!' });
 })
+
 
 httpServer.listen(PORT, () => {
   serverLogger.info(`Server is running on port ${PORT}`);

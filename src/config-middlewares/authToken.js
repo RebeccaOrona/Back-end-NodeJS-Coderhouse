@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export default authToken = (req,res,next) =>{
+export const authToken = (req,res,next) =>{
     const authHeader = req.headers.authorization;
     if(!authHeader) return res.status(401).send({error:"Not authenticated"})
 

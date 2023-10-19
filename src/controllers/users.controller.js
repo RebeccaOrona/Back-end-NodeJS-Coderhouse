@@ -140,7 +140,7 @@ export const resetPassword = async(req,res) =>{
 
 export const roleChange = async (req, res) => {
     try{
-      let {uid} = req.query;
+      let {uid} = req.params;
       let result =  await UserService.roleChange(uid);
       res.send({ status: "success", payload: result });
     } catch(error) {

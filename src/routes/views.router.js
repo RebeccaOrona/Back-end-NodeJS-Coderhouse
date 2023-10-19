@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import productsRouter from './products.router.js';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUIExpress from 'swagger-ui-express';
 
 
 const router = Router();
@@ -32,5 +34,21 @@ router.get('/logout', (req, res) => {
 
 router.use('/products', productsRouter);
   
+// // Swagger config
+// const swaggerOptions = {
+//   definition: {
+//       openapi: '3.0.1',
+//       info: {
+//           title: 'Documentacion API Ecommerce',
+//           description: 'Documentacion para uso de swagger!!'
+//       }
+//   },
+//   apis: [`./src/docs/**/*.yaml`]
+// }
+
+// // Creation of specs
+// const specs = swaggerJSDoc(swaggerOptions);
+// // Declaring of swagger API - endpoint
+// router.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
 
 export default router;

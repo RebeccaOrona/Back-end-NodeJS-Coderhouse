@@ -1,6 +1,4 @@
-
-
-export default authorization = (allowedRoles) =>{
+export const authorization = (allowedRoles) => {
     return async(req,res,next) => {
         const userRole = req.user.user.role;
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { passportCall } from '../utils.js';
+import { passportCall } from '../config-middlewares/passportCall.js';
 import {  register,failRegister,login,failLogin,logout,githubcallback,github,currentUser,resetPassword, sendEmail, roleChange } from '../controllers/users.controller.js';
 
 

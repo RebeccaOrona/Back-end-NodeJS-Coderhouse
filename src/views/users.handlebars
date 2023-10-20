@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #007BFF;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>User list</h1>
+
+    <!-- Lista de usuarios -->
+    <ul>
+        {{#each users}}
+        <li>
+            <strong>{{name}}</strong> ({{email}}) - Rol: {{role}}
+            <form id="updateRoleForm" data-email="{{email}}">
+                <label for="role">Cambiar Rol:</label>
+                <select name="role" id="role">
+                    <option value="usuario">Usuario</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <button type="button" onclick="updateRole(this)">Actualizar Rol</button>
+            </form>
+            <form id="deleteUserForm" data-email="{{email}}">
+                <button type="button" onclick="deleteUser(this)">Eliminar Usuario</button>
+            </form>
+        </li>
+        {{/each}}
+    </ul>
+    <script src="/js/users.js"></script>
+</body>
+</html>

@@ -83,13 +83,21 @@
           position: absolute;
           top: 10px;
           right: 10px;
+          margin-left: 20px;
         }
 
         #logout-icon {
           color: #007BFF;
         }
-        
-        
+
+        #userButtonContainer {
+          position: relative;
+          bottom: 10px;
+        }
+        #miPerfilLink {
+          position: relative;
+          margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -110,7 +118,10 @@
       <p class="card-text"><strong>Email:</strong> <span id="userEmail"></span></p>
       <p class="card-text"><strong>Edad:</strong> <span id="userAge"></span></p>
       <p class="card-text"><strong>Rol:</strong> <span id="userRole"></span></p>
-      <a href="/profile" class="btn btn-primary">
+      <div id="userButtonContainer">
+          
+      </div>
+      <a id="miPerfilButton" href="/profile" class="btn btn-primary">
         <i class="fas fa-user"></i> Mi perfil
       </a>
     </div>

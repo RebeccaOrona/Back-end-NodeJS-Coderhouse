@@ -3,13 +3,8 @@ import mongoose from 'mongoose';
 const ticketCollection = 'tickets'
 
 const ticketSchema = new mongoose.Schema({
-    code:{
-        type: String
-        
-    },
-    purchase_datetime: {
-        type: String
-    },
+    code: String,
+    purchase_datetime: String,
     amount: Number,
     purchaser: String
 })

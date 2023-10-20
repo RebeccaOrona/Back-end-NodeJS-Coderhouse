@@ -5,6 +5,7 @@ import UserDTO from "../daos/DTOs/user.dto.js";
 import { isValidPassword } from "../utils.js";
 import jwt from 'jsonwebtoken'
 import env from '../config-middlewares/environment.js';
+import { authorization } from "../config-middlewares/authorization.js";
 
 export const register =  (req, res) => {
     passport.authenticate('register', { failureRedirect: '/api/users/failRegister' })(req, res, () => {
@@ -41,6 +42,9 @@ export const failLogin = (req,res) => {
 }
 
 export const logout = async(req,res)=>{
+    let body = req.body;
+    console.log(body.user)
+    UserService.logoutLastConnection(body.user);
     res.status(200).send({ status: 'success', message: 'Logout successful' });
 }
 
@@ -71,7 +75,8 @@ export const githubcallback = (req, res) => {
 
 export const currentUser = async(req, res) => {
     let user = new UserDTO({
-        name: `${req.user.user.first_name} ${req.user.user.last_name}`,
+        first_name: req.user.user.first_name,
+        last_name: req.user.user.last_name,
         age: req.user.user.age,
         email: req.user.user.email,
         role: req.user.user.role
@@ -140,14 +145,47 @@ export const resetPassword = async(req,res) =>{
 
 export const roleChange = async (req, res) => {
     try{
-      let {uid} = req.params;
-      let result =  await UserService.roleChange(uid);
-      res.send({ status: "success", payload: result });
+      let email = req.body.email;
+      let newRole = req.body.role;
+      let result = await UserService.roleChange(email, newRole);
+      res.status(200).send({status: "success", payload: result})
     } catch(error) {
       req.logger.error(error);
       res.status(500).send({ status: "error", message: "Internal server error" });
     }
   }
 
+export const getAllUsers = (req, res) => { authorization("admin")(req,res, async() =>{
+    try{
+        let users =  await UserService.getAllUsers();
+        res.render('users', { users });
+    } catch(error) {
+      req.logger.error(error);
+      res.status(500).send({ status: "error", message: "Internal server error" });
+    }
+})
+}
 
+export const deleteInactiveUsers = async(req,res) =>{
+    try{
+        let result =  await UserService.deleteInactiveUsers();
+        res.send({ status: "success", payload: result });
+    } catch(error) {
+        req.logger.error(error);
+        res.status(500).send({ status: "error", message: "Internal server error" });
+    }
+}
+
+export const deleteUser = (req, res) => { authorization("admin")(req,res, async() =>{
+    try{
+        let email = req.body.email;
+        console.log(email)
+        let result =  await UserService.deleteUser(email);
+        res.status(200).send({status: "success", payload: result})
+    } catch(error) {
+        req.logger.error(error);
+        res.status(500).send({ status: "error", message: "Internal server error" });
+    }
+})
+}
 

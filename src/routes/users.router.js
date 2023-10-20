@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import { passportCall } from '../config-middlewares/passportCall.js';
-import {  register,failRegister,login,failLogin,logout,githubcallback,github,currentUser,resetPassword, sendEmail, roleChange } from '../controllers/users.controller.js';
-
+import {  getAllUsers,deleteInactiveUsers,register,failRegister,login,failLogin,logout,githubcallback,github,currentUser,resetPassword, sendEmail, roleChange, deleteUser } from '../controllers/users.controller.js';
 
 
 const userRouter = Router();
 
+userRouter.get('/', passportCall('jwt'), getAllUsers)
+
+userRouter.delete('/', deleteInactiveUsers)
 
 userRouter.post('/register', register);
 
@@ -25,10 +27,11 @@ userRouter.post('/sendResetPassEmail', sendEmail);
 
 userRouter.put('/resetPassword', resetPassword);
 
-userRouter.get('/logout', logout);
+userRouter.post('/logout', logout);
 
-userRouter.put('/premium/:uid', roleChange)
+userRouter.post('/premium',passportCall('jwt'), roleChange)
 
+userRouter.delete('/deleteUser',passportCall('jwt'), deleteUser)
 
 
 export default userRouter;

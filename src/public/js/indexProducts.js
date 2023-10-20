@@ -74,19 +74,25 @@ let baseUrl = 'http://localhost:8080';
           if(entryCount===1) welcomeMessage.textContent = "¡Bienvenidx a la página!"
           else welcomeMessage.textContent = `¡Bienvenido a la página! Has ingresado ${entryCount} veces.`;
 
-          
+          const userButtonContainer = document.getElementById('userButtonContainer');
           const nameElement = document.getElementById('userName');
           const emailElement = document.getElementById('userEmail');
           const ageElement = document.getElementById('userAge');
-          const userElement = document.getElementById('userRole');
+          const roleElement = document.getElementById('userRole');
           const checkIcon = document.createElement('i');
           checkIcon.classList.add('fas', 'fa-check');
-          if(userData.email==='adminCoder@coder.com'){
+          if(userData.payload.email=='adminCoder@coder.com'){
+            nameElement.textContent = userData.payload.name;
             emailElement.textContent = userData.payload.email;
-            userElement.textContent = userData.payload.role;
-            userElement.appendChild(checkIcon);
-            nameElement.textContent = 'No existente';
-            ageElement.textContent = 'No existente';
+            ageElement.textContent = userData.payload.age;
+            roleElement.textContent = userData.payload.role;
+            roleElement.appendChild(checkIcon);
+            
+            const adminButton = document.createElement('a');
+            adminButton.href = 'http://localhost:8080/api/users';
+            adminButton.textContent = 'Users page';
+            adminButton.classList.add('btn', 'btn-primary');
+            userButtonContainer.appendChild(adminButton);
           } else {
 
             
@@ -96,7 +102,7 @@ let baseUrl = 'http://localhost:8080';
           
           ageElement.textContent = userData.payload.age;
         
-          userElement.textContent = userData.payload.role;
+          roleElement.textContent = userData.payload.role;
           }
         }
   })

@@ -16,7 +16,23 @@ export default class userRepository{
         return await this.dao.sendEmail(email);
     }
 
-    roleChange = async(uid) =>{
-        return await this.dao.roleChange(uid);
+    roleChange = async(email, newRole) =>{
+        return await this.dao.roleChange(email, newRole);
+    }
+
+    logoutLastConnection = async(currentUser) => {
+        return await this.dao.logoutLastConnection(currentUser);
+    }
+
+    getAllUsers = async() =>{
+        return await this.dao.getAllUsers();
+    }
+
+    deleteInactiveUsers = async() =>{
+        return await this.dao.deleteInactiveUsers();
+    }
+
+    deleteUser = async(email) =>{
+        return await this.dao.deleteUser(email);
     }
 }

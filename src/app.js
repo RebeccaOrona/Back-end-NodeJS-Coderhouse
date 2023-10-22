@@ -21,10 +21,10 @@ import errorHandler from './config-middlewares/error.index.js';
 import { addLogger, serverLogger } from './config-middlewares/logger.js';
 
 
-const sessionSecret = env.sessionSecret;
-const mongoUrl = env.mongoUrl;
+const sessionSecret = process.env.sessionSecret;
+const mongoUrl = process.env.mongoUrl;
 const app = express();
-const PORT = env.port;
+const PORT = process.env.PORT || 8080;
 app.use(addLogger);
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);

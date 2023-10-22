@@ -64,11 +64,8 @@ export default class UsersDao {
               // User found, update the 'last_connection' property
               user.last_connection = new Date();
               await user.save();
-              console.log('User last_connection updated:', user);
-            } else {
-              console.log('User not found.');
-            }
-          } catch (error) {
+            } 
+        }catch (error) {
             console.error('Error updating user last_connection:', error);
           }
         }

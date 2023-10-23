@@ -28,11 +28,10 @@ const PORT = process.env.PORT || 8080;
 app.use(addLogger);
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
-const connection = mongoose.createConnection(mongoUrl, {
+const connection = mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-connection.useDb('production')
 app.use(express.json());
 // app.use(errorHandler);
 app.use(cors({

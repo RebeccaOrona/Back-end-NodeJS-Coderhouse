@@ -19,7 +19,7 @@ router.get('/tokenExpired', (req,res) =>{
   res.render('token-expired')
 })
 
-router.get('/', (req, res) => {
+router.get('/login', (req, res) => {
     res.render('login');
 })
 

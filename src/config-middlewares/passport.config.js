@@ -22,7 +22,7 @@ export const cookieExtractor = (req) => {
 }
 
 const jwtOptions = {
-    jwtFromRequest: cookieExtractor, // Use your cookieExtractor function
+    jwtFromRequest: cookieExtractor,
     secretOrKey: env.PRIVATE_KEY,
   };
 

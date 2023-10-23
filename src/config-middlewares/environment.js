@@ -3,14 +3,13 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 const env = {
-    port: process.env.PORT,
-    mongoUrl: process.env.mongoUrl,
-    baseUrl: process.env.baseUrl,
+    PORT: process.env.PORT,
+    MONGO_URL: process.env.MONGO_URL,
     PRIVATE_KEY: process.env.PRIVATE_KEY,
-    clientID: process.env.clientID,
-    clientSecret: process.env.clientSecret,
-    callbackURL: process.env.callbackURL,
-    sessionSecret: process.env.SESSION_SECRET,
+    CLIENT_ID: process.env.CLIENT_ID,
+    CLIENT_SECRET: process.env.CLIENT_SECRET,
+    CALLBACK_URL: process.env.CALLBACK_URL,
+    SESSION_SECRET: process.env.SESSION_SECRET,
     environment: process.env.NODE_ENV,
     email_service: process.env.email_service,
     email_port: process.env.email_port,

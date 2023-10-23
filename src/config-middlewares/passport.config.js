@@ -130,9 +130,9 @@ const initializePassport = () => {
 
     passport.use('github',new GitHubStrategy({
         passReqToCallback:true,
-        clientID:env.clientID,
-        clientSecret: env.clientSecret,
-        callbackURL:env.callbackURL
+        clientId:env.CLIENT_ID,
+        clientSecret: env.CLIENT_SECRET,
+        callbackURL:env.CALLBACK_URL
     }, async(req, accessToken, refreshToken, profile, done)=> {
         try{
             let user = await userModel.findOne({email:profile._json.email});

@@ -4,7 +4,7 @@ import socketIoClient from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.7.2/
 const socket = socketIoClient();
 var cartId = null;
 let purchaser = null;
-let baseUrl = 'https://back-end-nodejs-coderhouse-production.up.railway.app';
+let baseUrl = 'https://back-end-nodejs-coderhouse-development.up.railway.app';
 
     function getCookie(name) {
       const value = `; ${document.cookie}`;
@@ -89,7 +89,7 @@ let baseUrl = 'https://back-end-nodejs-coderhouse-production.up.railway.app';
             roleElement.appendChild(checkIcon);
             
             const adminButton = document.createElement('a');
-            adminButton.href = 'https://back-end-nodejs-coderhouse-production.up.railway.app/api/users';
+            adminButton.href = 'https://back-end-nodejs-coderhouse-development.up.railway.app/api/users';
             adminButton.textContent = 'Users page';
             adminButton.classList.add('btn', 'btn-primary');
             userButtonContainer.appendChild(adminButton);

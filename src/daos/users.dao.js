@@ -32,7 +32,7 @@ export default class UsersDao {
         const expirationTime = Math.floor(Date.now() / 1000) + 3600;
         const token = jwt.sign({ email, exp: expirationTime}, secretKey);
 
-        const resetLink = `http://localhost:8080/resetPassword?token=${token}&exp=${expirationTime}`;
+        const resetLink = `https://back-end-nodejs-coderhouse-production.up.railway.app/resetPassword?token=${token}&exp=${expirationTime}`;
         let result = await transport.sendMail({
             from:`Rebecca Orona <${env.email_user}>`,
             to:email,
@@ -41,7 +41,7 @@ export default class UsersDao {
             <div>
                 <h1> Restablecimiento de contraseña </h1>
                 <p> Para establecer su contraseña <a href=${resetLink}>ingrese aquí</a></p>
-                <p> ¿No es necesario cambiar la contraseña? <a href="http://localhost:8080/">Inicia sesion aquí</a></p>
+                <p> ¿No es necesario cambiar la contraseña? <a href="https://back-end-nodejs-coderhouse-production.up.railway.app/">Inicia sesion aquí</a></p>
             </div>
             `,
             attachments:[]
@@ -99,7 +99,7 @@ export default class UsersDao {
                             <p style="color: black;">Nos comunicamos con usted para avisarle que su cuenta
                             lamentablemente acaba de ser eliminada por inactividad</p>
                             <p style="color: black;"> ¿Piensa que ocurrio un error? Comuniquese con nosotros</p>
-                            <p style="color: black;"> ¿Desea crear una nueva cuenta? <a href="http://localhost:8080/register">Cree una aquí</a></p>
+                            <p style="color: black;"> ¿Desea crear una nueva cuenta? <a href="https://back-end-nodejs-coderhouse-production.up.railway.app/register">Cree una aquí</a></p>
 
                             <p style="color: black;">Comercio Blahaj</p>
                         </div>

@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
     purchaseButton.addEventListener('click', function () {
         
         // Construct the purchase URL
-        const purchaseUrl = `http://localhost:8080/api/carts/${cartId}/purchase`;
+        const purchaseUrl = `https://back-end-nodejs-coderhouse-production.up.railway.app/api/carts/${cartId}/purchase`;
 
         // Perform the purchase by making a fetch request
         fetch(purchaseUrl, {

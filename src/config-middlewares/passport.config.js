@@ -130,7 +130,7 @@ const initializePassport = () => {
 
     passport.use('github',new GitHubStrategy({
         passReqToCallback:true,
-        clientId:env.CLIENT_ID,
+        clientID:env.CLIENT_ID,
         clientSecret: env.CLIENT_SECRET,
         callbackURL:env.CALLBACK_URL
     }, async(req, accessToken, refreshToken, profile, done)=> {

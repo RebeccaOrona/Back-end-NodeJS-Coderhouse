@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return new Promise((resolve) => {
             sweetalert2.fire({
                 icon: 'success',
-                title: 'Cart purchased successfully.',
-                text: `You purchased the items in your cart successfully!`,
+                title: 'Carrito comprado exitosamente',
+                text: `Compraste los productos de tu carrito exitosamente!`,
                 toast: true,
                 position: 'top-right',
                 showCancelButton: false,
@@ -79,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return new Promise((resolve) => {
             sweetalert2.fire({
                 icon: 'error',
-                title: 'Failed to purchase your cart',
-                text: `There isn't enough stock for certain items to purchase from your cart`,
+                title: 'Error en la compra de tu carrito',
+                text: `No hay suficiente stock para ciertos productos de tu carrito`,
                 toast: true,
                 position: 'top-right',
                 showCancelButton: false,

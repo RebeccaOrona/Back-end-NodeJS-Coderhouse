@@ -136,7 +136,7 @@
       <p>Precio: US${{this.price}} </p>
       <p>Categoria: {{this.category}}</p>
       <a href="/api/products/{{this._id}}">Ver detalles</a>
-      <div id="addCart-icon" class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">
+      <div id="addCart-icon" class="addToCartButton" data-title="{{this.title}}" data-productId="{{this._id}}" data-cartId="{{cartId}}">
         <i class="fas fa-cart-plus"></i> Agregar al carrito
       </div>
     </li>

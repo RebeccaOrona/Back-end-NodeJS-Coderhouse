@@ -6,18 +6,22 @@ var cartId = null;
 let purchaser = null;
 let baseUrl = 'https://back-end-nodejs-coderhouse-development.up.railway.app';
 
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    }
+function showUpdateProduct(){
 
-    const token = getCookie('cookieToken'); 
+}
 
-    socket.on('newClientConnected', async() => {
-      const carritoLink = document.getElementById('carritoLink');
-    try {
-      fetch('/api/users/currentUser', {
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+const token = getCookie('cookieToken'); 
+
+socket.on('newClientConnected', async() => {
+  const carritoLink = document.getElementById('carritoLink');
+  try {
+    fetch('/api/users/currentUser', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -114,6 +118,7 @@ var productId = null;
   document.addEventListener('click', async (event) => {
     if (event.target.classList.contains('addToCartButton')) {
     
+      productName = event.target.getAttribute('data-title');
       productId = event.target.getAttribute('data-productid');
       try {
         const response = await fetch(`${baseUrl}/api/carts/${cartId}/product/${productId}`, {
@@ -126,7 +131,7 @@ var productId = null;
         } else if (!response.ok) {
           throw new Error('Request failed');
         } else {
-          socket.emit('addToCart', {productId: productId, cartId: cartId} );
+          socket.emit('addToCart', {name: productName} );
         }
     } catch (error) {
       console.error('Error:', error);
@@ -136,11 +141,11 @@ var productId = null;
   
   // Emitir el evento 'addToCart' al servidor con el productId
   
-  socket.on('productAddedToCart', (productId) => {
+  socket.on('productAddedToCart', (productName) => {
     Swal.fire({
       icon: 'success',
-      title: 'Product Added to Cart',
-      text: `Product with ID ${productId} added to cart!`,
+      title: 'Producto agregado al carrito',
+      text: `El producto: ${productName} fue agregado al carrito!`,
       toast: true,
       position: 'top-right',
       showConfirmButton: false,

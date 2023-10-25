@@ -15,10 +15,25 @@
             text-align: left;
             margin-bottom: 20px;
         }
+        #productsButton {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 9999;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <h1>User list</h1>
+    <a id="productsButton" href="/products" class="btn btn-primary">
+        <i class="fas fa-list-ul"></i> Volver a lista de productos
+    </a>
 
     <!-- Lista de usuarios -->
     <ul>
@@ -36,6 +51,7 @@
             <form id="deleteUserForm" data-email="{{email}}">
                 <button type="button" onclick="deleteUser(this)">Eliminar Usuario</button>
             </form>
+            
         </li>
         {{/each}}
     </ul>

@@ -11,7 +11,7 @@ export const getChat = async (req, res) => {
     }
 }
 
-export const sendMessage = (req, res) => { authorization("usuario")(req,res, async() =>{
+export const sendMessage = (req, res) => { authorization(["usuario","premium"])(req,res, async() =>{
     try {
         let sender = req.user.user.email;
         let { message } = req.body;

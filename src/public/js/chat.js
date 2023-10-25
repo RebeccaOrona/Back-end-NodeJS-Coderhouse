@@ -85,26 +85,26 @@ import sweetalert2 from 'https://cdn.jsdelivr.net/npm/sweetalert2@11.7.20/+esm'
                 // Muestra un SweetAlert si el código de estado es 403
                 new sweetalert2("No se puede enviar el mensaje", "No eres un usuario válido", "error");
               } else if (response.ok) {
-                  // Si la respuesta es exitosa (código de estado 200-299), procesa los datos
-                  return response.json();
+                fetch('/api/users/currentUser', {
+                  headers: {
+                    'Authorization': `Bearer ${token}`
+                  }
+                })
+                .then(response => response.json())
+                .then(userData => { 
+                  user = userData.payload.email;
+                  const li = document.createElement('li');
+                  li.textContent = (`${user} dice: ` + input.message);
+                  messages.appendChild(li);
+                })
+                return response.json();
               } else {
                   // Maneja otros errores de la respuesta
                   console.error('Error en la respuesta:', response);
               }
             })
             .catch((error) => console.error('Error:', error));
-            fetch('/api/users/currentUser', {
-              headers: {
-                'Authorization': `Bearer ${token}`
-              }
-            })
-            .then(response => response.json())
-            .then(userData => { 
-              user = userData.payload.email;
-              const li = document.createElement('li');
-              li.textContent = (`${user} dice: ` + input.message);
-              messages.appendChild(li);
-            })
+            
           
       })
               

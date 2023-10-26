@@ -216,8 +216,8 @@ socket.on('newClientConnected', async() => {
             roleElement.appendChild(checkIcon);
             
             const adminButton = document.createElement('a');
-            adminButton.href = 'https://back-end-nodejs-coderhouse-development.up.railway.app/api/users';
-            adminButton.textContent = 'Users page';
+            adminButton.href = 'https://back-end-nodejs-coderhouse-production.up.railway.app/api/users';
+            adminButton.textContent = 'Users';
             adminButton.classList.add('btn', 'btn-primary');
             userButtonContainer.appendChild(adminButton);
           } else {
@@ -242,7 +242,7 @@ var productId = null;
     if (event.target.classList.contains('addToCartButton')) {
     
       productName = event.target.getAttribute('data-title');
-      productId = event.target.getAttribute('data-productid');
+      productId = event.target.getAttribute('data-productId');
       try {
         const response = await fetch(`${baseUrl}/api/carts/${cartId}/product/${productId}`, {
           method: 'POST',

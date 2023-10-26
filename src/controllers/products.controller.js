@@ -24,7 +24,7 @@ export const getProductsPage = async(req, res) => {
 };
 
 
-export const getProductById = (req, res) => { authorization("usuario")(req,res, async() =>{
+export const getProductById = (req, res) => { authorization(["usuario","premium"])(req,res, async() =>{
   try{
     const {pid} = req.params
     const product = await ProductsService.getProductById(pid)
@@ -93,6 +93,7 @@ export const createOne = (req, res) => { authorization(["admin","premium"])(req,
     try{
       const {pid} = req.params;
       const updatedProductData = req.body;
+      console.log(updatedProductData)
       if(typeof updatedProductData.title !== 'string' ||
         typeof updatedProductData.description !== 'string' ||
         typeof updatedProductData.code  !== 'string' ||

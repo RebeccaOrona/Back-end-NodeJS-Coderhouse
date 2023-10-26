@@ -83,10 +83,10 @@ io.on('connection', async socket => {
   
       socket.on('addToCart', async (data) => {
         try {
-          const productId = data.productId;
+          const productName = data.productName;
           
           // Emit the 'productAddedToCart' event to all clients
-          io.emit('productAddedToCart', productId);
+          io.emit('productAddedToCart', productName);
         } catch (error) {
           // Handle the error if the request fails
           serverLogger.error('Failed to add product to cart:', error);

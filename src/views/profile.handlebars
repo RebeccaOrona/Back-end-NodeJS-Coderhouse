@@ -87,53 +87,55 @@
         </div>
     </div>
     <script>
-        async function fetchUserDataAndPopulateTemplate() {
-        try {
-            // Funcion para obtener el valor de una cookie en especifico
-            function getCookieValue(cookieName) {
-                const cookies = document.cookie.split('; ');
-                for (const cookie of cookies) {
-                    const [name, value] = cookie.split('=');
-                    if (name === cookieName) {
-                        return decodeURIComponent(value);
+        document.addEventListener("DOMContentLoaded", function () {
+            async function fetchUserDataAndPopulateTemplate() {
+            try {
+                // Funcion para obtener el valor de una cookie en especifico
+                function getCookieValue(cookieName) {
+                    const cookies = document.cookie.split('; ');
+                    for (const cookie of cookies) {
+                        const [name, value] = cookie.split('=');
+                        if (name === cookieName) {
+                            return decodeURIComponent(value);
+                        }
                     }
+                return null; // No se encontro la cookie
                 }
-            return null; // No se encontro la cookie
-            }
 
-            // Usage
-            const cookieTokenValue = getCookieValue('cookieToken');
-            if (cookieTokenValue == null) {
-                console.error('Cookie not found');
-            }
-        
-
-            const response = await fetch('https://back-end-nodejs-coderhouse-production.up.railway.app/api/users/currentUser', {
-                headers: {
-                    'Authorization': `Bearer ${cookieTokenValue}`
+                // Usage
+                const cookieTokenValue = getCookieValue('cookieToken');
+                if (cookieTokenValue == null) {
+                    console.error('Cookie not found');
                 }
-            });
+            
 
-            if (!response.ok) {
-                console.error('Response status:', response.status);
-                throw new Error('Failed to fetch user data');
+                const response = await fetch('https://back-end-nodejs-coderhouse-development.up.railway.app/api/users/currentUser', {
+                    headers: {
+                        'Authorization': `Bearer ${cookieTokenValue}`
+                    }
+                });
+
+                if (!response.ok) {
+                    console.error('Response status:', response.status);
+                    throw new Error('Failed to fetch user data');
+                }
+
+                const userDataJson = await response.json();
+                const userData = userDataJson.payload;
+
+                // Actualizo los datos con la data de usuario
+                document.getElementById('userName').textContent = userData.name || 'No existente';
+                document.getElementById('userEmail').textContent = userData.email || 'No existente';
+                document.getElementById('userAge').textContent = userData.age || 'No existente';
+                document.getElementById('userRole').textContent = userData.role || 'No existente';
+            } catch (error) {
+                console.error('Error:', error.message);
             }
-
-            const userDataJson = await response.json();
-            const userData = userDataJson.payload;
-
-            // Actualizo los datos con la data de usuario
-            document.getElementById('userName').textContent = userData.name || 'No existente';
-            document.getElementById('userEmail').textContent = userData.email || 'No existente';
-            document.getElementById('userAge').textContent = userData.age || 'No existente';
-            document.getElementById('userRole').textContent = userData.role || 'No existente';
-        } catch (error) {
-            console.error('Error:', error.message);
         }
-    }
 
-    // Llamar a la funcion para el fetch y populate de la data de usuario
-    fetchUserDataAndPopulateTemplate();
+        // Llamar a la funcion para el fetch y populate de la data de usuario
+        fetchUserDataAndPopulateTemplate();
+    });
 </script>
 </body>
 </html>

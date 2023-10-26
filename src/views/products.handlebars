@@ -54,6 +54,7 @@
             border: none;
             cursor: pointer;
             border-radius: 4px;
+            transition: background-color 0.3s;
         }
 
         .addToCartButton:hover {
@@ -98,6 +99,57 @@
           position: relative;
           margin-top: 20px;
         }
+        .updateProductButton {
+            background-color: #de5a98;
+            width: fit-content;
+            color: #fff;
+            padding: 8px 16px;
+            border: none; 
+            cursor: pointer; 
+            border-radius: 4px; 
+            margin-top: 10px;
+            white-space: nowrap;
+            transition: background-color 0.3s;
+        }
+
+        .updateProductButton:hover {
+            background-color: #d14a85;
+        }
+        .update-product-form {
+            background-color: #f8f9fa; 
+            padding: 20px; 
+            margin-top: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+        }
+        .rellenarButton {
+          background-color: #3498db; /* Background color */
+          color: #fff; /* Text color */
+          border: none; /* Remove border */
+          padding: 5px 10px; /* Padding */
+          border-radius: 5px; /* Rounded corners */
+          cursor: pointer; /* Show pointer cursor on hover */
+          transition: background-color 0.3s; /* Smooth color transition on hover */
+        }
+
+        /* Change the button color on hover */
+        .rellenarButton:hover {
+          background-color: #2980b9;
+        }
+
+        .updateButton {
+          background-color: #82ce61; /* Background color */
+          color: #fff; /* Text color */
+          border: none; /* Remove border */
+          padding: 5px 10px; /* Padding */
+          border-radius: 5px; /* Rounded corners */
+          cursor: pointer; /* Show pointer cursor on hover */
+          transition: background-color 0.3s; /* Smooth color transition on hover */
+        }
+
+        .updateButton:hover {
+          background-color: #68cf3d;
+        }
     </style>
 </head>
 <body>
@@ -133,11 +185,52 @@
     {{#each products.docs}}
     <li>
       <h3>{{this.title}}</h3>
-      <p>Precio: {{this.price}}</p>
+      <p>Precio: US${{this.price}} </p>
       <p>Categoria: {{this.category}}</p>
       <a href="/api/products/{{this._id}}">Ver detalles</a>
-      <div id="addCart-icon" class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">
+      <div id="addCart-icon" class="addToCartButton" data-title="{{this.title}}" data-productId="{{this._id}}" data-cartId="{{cartId}}">
         <i class="fas fa-cart-plus"></i> Agregar al carrito
+      </div>
+      <div class="update-product-form" style="display: none;">
+        <h2>Modificar producto</h2>
+        <form id="updateProductForm">
+            <label for="title">Nombre:</label>
+            <input type="text" id="title" name="title">
+            <button type="button" class="rellenarButton" data-title="{{this.title}}" data-field="title">Rellenar</button><br>
+
+            <label for="description">Descripcion:</label>
+            <input type="text" id="description" name="description">
+            <button type="button" class="rellenarButton" data-description="{{this.description}}" data-field="description">Rellenar</button><br>
+
+            <label for="code">Codigo:</label>
+            <input type="text" id="code" name="code">
+            <button type="button" class="rellenarButton" data-code="{{this.code}}" data-field="code">Rellenar</button><br>
+
+            <label for="price">Precio:</label>
+            <input type="number" id="price" name="price">
+            <button type="button" class="rellenarButton" data-price="{{this.price}}" data-field="price">Rellenar</button><br>
+
+            <label for="status">Estado:</label>
+            <select name="status" id="status">
+              <option value="true">Verdadero</option>
+              <option value="false">Falso</option>
+            </select>
+            <button type="button" class="rellenarButton" data-status="{{this.status}}" data-field="status">Rellenar</button><br>
+
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock">
+            <button type="button" class="rellenarButton" data-stock="{{this.stock}}" data-field="stock">Rellenar</button><br>
+
+            <label for="category">Categoria:</label>
+            <input type="text" id="category" name="category">
+            <button type="button" class="rellenarButton" data-category="{{this.category}}" data-field="category">Rellenar</button><br>
+
+            <label for="thumbnail">Foto:</label>
+            <input type="text" id="thumbnail" name="thumbnail">
+            <button type="button" class="rellenarButton" data-thumbnail="{{this.thumbnail}}" data-field="thumbnail">Rellenar</button><br>
+
+            <button type="button" class="updateButton" data-productId="{{this._id}}">Actualizar</button>
+        </form>
       </div>
     </li>
     {{/each}}

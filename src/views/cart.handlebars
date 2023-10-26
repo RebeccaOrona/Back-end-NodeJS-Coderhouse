@@ -11,8 +11,11 @@
             padding: 0;
         }
 
-        .container {
-            max-width: 800px;
+        .cartContainer {
+            position: absolute;
+            top: 30px;
+            left: 160px;
+            width: 1000px;
             margin: 30px auto;
             padding: 20px;
             border: 1px solid #ccc;
@@ -73,7 +76,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="cartContainer">
         <h1><i class="fas fa-shopping-cart"></i> Carrito </h1>
         <div data-cart-id="{{cart._id}}"></div>
         <div class="product-items-container">
@@ -89,14 +92,13 @@
         {{/each}}
         </div>
         <button id="purchaseButton" class="btn">Comprar carrito</button>
-        <a id="productListButton" href="/products" class="btn">
-            <i class="fas fa-list-ul"></i> Volver a lista de productos
-        </a>
-        <a id="logoutButton" href="/logout" class="btn">
-            <i class="fas fa-sign-out"></i> Desconectarse
-        </a>
-        
     </div>
+    <a id="productListButton" href="/products" class="btn">
+        <i class="fas fa-list-ul"></i> Volver a lista de productos
+    </a>
+    <a id="logoutButton" href="/logout" class="btn">
+        <i class="fas fa-sign-out"></i> Desconectarse
+    </a> 
 </body>
 </html>
 

@@ -93,6 +93,7 @@ export const createOne = (req, res) => { authorization(["admin","premium"])(req,
     try{
       const {pid} = req.params;
       const updatedProductData = req.body;
+      console.log(updatedProductData)
       if(typeof updatedProductData.title !== 'string' ||
         typeof updatedProductData.description !== 'string' ||
         typeof updatedProductData.code  !== 'string' ||

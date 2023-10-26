@@ -20,33 +20,46 @@ function showUpdateProduct() {
       const updateProductButton = document.createElement('div');
       updateProductButton.classList.add('updateProductButton'); // You can define the CSS styles for this class
       updateProductButton.innerHTML = '<i class="fas fa-pencil-alt"></i> Actualizar Producto';
-      
-
-      // Add a click event listener to the "Update Product" button
-      updateProductButton.addEventListener('click', () => {
-        updateProductForm.style.display = 'block';
-      });
+      updateProductButton.setAttribute('data-productId', addToCartButton.getAttribute('data-productId'));
 
       // Insert the "Update Product" button after the "Agregar al Carrito" button
       addAfter(addToCartButton, updateProductButton);
+
+      updateProductButton.addEventListener('click', async (event) => {
+        const parentContainer = event.target.parentElement; // Get the parent container
+        const updateProductForm = parentContainer.querySelector('.update-product-form');
+
+        if (updateProductForm.style.display === 'block') {
+            // If the form is already displayed, hide it and reset the button text
+            updateProductForm.style.display = 'none';
+            updateProductButton.innerHTML = '<i class="fas fa-pencil-alt"></i> Actualizar Producto';
+        } else {
+            // If the form is not displayed, show it and change the button text
+            updateProductForm.style.display = 'block';
+            updateProductButton.innerHTML = '<i class="fas fa-times"></i> Cancelar modificacion del producto';
+        }
+    });
   });
 }
 
-updateProductForm.addEventListener('submit', async (event) => {
-  event.preventDefault();
+async function updateProduct(button){
+  const form = button.parentElement;
 
   // Get the product details from the form input fields
-  const title = document.querySelector('#title').value;
-  const description = document.querySelector('#description').value;
-  const code = document.querySelector('#code').value;
-  const price = document.querySelector('#price').value;
-  const status = document.querySelector('#status').value;
-  const stock = document.querySelector('#stock').value;
-  const category = document.querySelector('#category').value;
-  const thumbnail = document.querySelector('#thumbnail').value;
+  const title = form.querySelector('#title').value;
+  const description = form.querySelector('#description').value;
+  const code = form.querySelector('#code').value;
+  const priceValue = form.querySelector('#price').value;
+  const price = Number.parseFloat(priceValue);
+  const statusValue = form.querySelector('#status').value;
+  const status = statusValue === 'true';
+  const stockValue = form.querySelector('#stock').value;
+  const stock = Number.parseInt(stockValue)
+  const category = form.querySelector('#category').value;
+  const thumbnail = form.querySelector('#thumbnail').value;
 
   // Get the productId from the "Update Product" button
-  const productId = event.target.getAttribute('data-productid');
+  const productId = button.getAttribute('data-productId');
 
   // Prepare the data for the PUT request
   const productData = {
@@ -69,7 +82,7 @@ updateProductForm.addEventListener('submit', async (event) => {
         },
         body: JSON.stringify(productData)
     });
-
+    console.log(await response.json())
     if (response.ok) {
       updateProductForm.style.display = 'none';
       Swal.fire({
@@ -81,12 +94,41 @@ updateProductForm.addEventListener('submit', async (event) => {
         showConfirmButton: false,
         timer: 3000
       });
+      setTimeout(() => {
+        window.location.replace('/products');
+      }, 3000);
     } else {
         console.error('Error updating product:', response.statusText);
     }
   } catch (error) {
       console.error('Error updating product:', error);
   }
+};
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Find the buttons and attach the event listener
+  const updateButtons = document.querySelectorAll('.updateButton');
+
+  updateButtons.forEach((button) => {
+    button.addEventListener('click', function() {
+      updateProduct(this);
+    });
+  });
+
+  const rellenarButtons = document.querySelectorAll('.rellenarButton');
+  rellenarButtons.forEach(button => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      // Get the data-field attribute to determine which field to fill
+      const field = button.getAttribute('data-field');
+      const dataValue = button.getAttribute(`data-${field}`);
+      const inputField = document.getElementById(field);
+        if (inputField) {
+          inputField.value = dataValue;
+        }
+    });
+  });
+
 });
 
 function getCookie(name) {

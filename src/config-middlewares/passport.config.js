@@ -145,13 +145,12 @@ const initializePassport = () => {
                     password:'' 
                 }
                 let result = await userModel.create(newUser);
-                done(null,result);
+                const access_token = generateToken(result, req.res);
+                done(null,access_token);
+            } else {
+                const access_token = generateToken(user, req.res);
+                done(null,access_token);
             }
-        
-         else {
-            const access_token = generateToken(user, req.res);
-            done(null,access_token);
-         }
         }
          catch(error){
             return done(error);

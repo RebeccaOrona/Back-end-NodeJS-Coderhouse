@@ -32,7 +32,7 @@ export default class UsersDao {
         const expirationTime = Math.floor(Date.now() / 1000) + 3600;
         const token = jwt.sign({ email, exp: expirationTime}, secretKey);
 
-        const resetLink = `https://back-end-nodejs-coderhouse-development.up.railway.app/resetPassword?token=${token}&exp=${expirationTime}`;
+        const resetLink = `https://back-end-nodejs-coderhouse-production.up.railway.app/resetPassword?token=${token}&exp=${expirationTime}`;
         let result = await transport.sendMail({
             from:`Rebecca Orona <${env.email_user}>`,
             to:email,
@@ -41,7 +41,7 @@ export default class UsersDao {
             <div>
                 <h1> Restablecimiento de contraseña </h1>
                 <p> Para establecer su contraseña <a href=${resetLink}>ingrese aquí</a></p>
-                <p> ¿No es necesario cambiar la contraseña? <a href="https://back-end-nodejs-coderhouse-development.up.railway.app/">Inicia sesion aquí</a></p>
+                <p> ¿No es necesario cambiar la contraseña? <a href="https://back-end-nodejs-coderhouse-production.up.railway.app/">Inicia sesion aquí</a></p>
             </div>
             `,
             attachments:[]

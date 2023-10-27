@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: `Password fields cannot be empty`,
+                        text: `Los campos de contraseñas no pueden estar vacios`,
                         toast: true,
                         position: 'top-right',
                         showConfirmButton: false,
@@ -56,6 +56,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         setTimeout(() => {
                             window.location.replace('/');
                         }, 3000); // Redirect after 3 seconds
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No se logro restablecer la contraseña',
+                            text: `La nueva contraseña no debe ser la misma que la anterior`,
+                            toast: true,
+                            position: 'center',
+                            showConfirmButton: true
+                          });
                     }
                 })
             })

@@ -83,7 +83,7 @@ io.on('connection', async socket => {
   
       socket.on('addToCart', async (data) => {
         try {
-          const productName = data.productName;
+          const productName = data.name;
           
           // Emit the 'productAddedToCart' event to all clients
           io.emit('productAddedToCart', productName);

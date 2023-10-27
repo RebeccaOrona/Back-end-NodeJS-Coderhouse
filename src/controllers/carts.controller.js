@@ -24,7 +24,7 @@ export const addToCart = (req, res) => { authorization(["usuario","premium"])(re
     if(req.user.user.role == "premium"){
       let owner = req.user.user.email
       let cart = await CartsService.addProductToCartPremium(cid,pid,owner);
-      res.send({payload: cart});
+      res.send(cart);
     } else {
       let cart = await CartsService.addProductToCart(cid,pid)
       res.send({ status: "success", payload: cart });

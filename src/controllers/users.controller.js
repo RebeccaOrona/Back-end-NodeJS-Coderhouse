@@ -87,7 +87,6 @@ export const currentUser = async(req, res) => {
 
 export const sendEmail = async(req,res) => {
     const email = req.body;
-    console.log(email.email);
 
     if (!email) {
         req.logger.error("Failed to send email, the email value is incomplete")
@@ -98,7 +97,6 @@ export const sendEmail = async(req,res) => {
     }
 
     let result = await UserService.sendEmail(email.email)
-    console.log(result)
     if(result) {
         res.send({ status: "success", payload:"Email sent successfully" })
     }

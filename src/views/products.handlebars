@@ -8,6 +8,27 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        .logo {
+            text-align: left;
+            padding: 20px 20px;
+        }
+
+        .logo img {
+            position: relative;
+            width: 50px;
+            left: 20px;
+            top: -10px;
+        }
+        
+        .logo-text {
+            position: relative;
+            top: -30px;
+            float: left;
+            font-size: 15px;
+            left: 10px;
+            color: #007BFF;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -61,15 +82,17 @@
             background-color: #0056b3;
         }
 
-        .container {
-        position: relative;
-        }
-
         #cart-container {
+          position: relative;
+          top: -80px;
           display: flex;
           align-items: center;
         }
 
+        #welcomeMessage {
+          position: relative;
+          top: -75px;
+        }
         #carritoLink {
           margin-right: 50px; 
         }
@@ -91,6 +114,10 @@
           color: #007BFF;
         }
 
+        #userInfo {
+          position: relative;
+          top: -45px;
+        }
         #userButtonContainer {
           position: relative;
           bottom: 10px;
@@ -123,28 +150,28 @@
             border-radius: 4px; 
         }
         .rellenarButton {
-          background-color: #3498db; /* Background color */
-          color: #fff; /* Text color */
-          border: none; /* Remove border */
-          padding: 5px 10px; /* Padding */
-          border-radius: 5px; /* Rounded corners */
-          cursor: pointer; /* Show pointer cursor on hover */
-          transition: background-color 0.3s; /* Smooth color transition on hover */
+          background-color: #3498db;
+          color: #fff; 
+          border: none; 
+          padding: 5px 10px; 
+          border-radius: 5px;
+          cursor: pointer; 
+          transition: background-color 0.3s;
         }
 
-        /* Change the button color on hover */
+       
         .rellenarButton:hover {
           background-color: #2980b9;
         }
 
         .updateButton {
-          background-color: #82ce61; /* Background color */
-          color: #fff; /* Text color */
-          border: none; /* Remove border */
-          padding: 5px 10px; /* Padding */
-          border-radius: 5px; /* Rounded corners */
-          cursor: pointer; /* Show pointer cursor on hover */
-          transition: background-color 0.3s; /* Smooth color transition on hover */
+          background-color: #82ce61;
+          color: #fff;
+          border: none; 
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer; 
+          transition: background-color 0.3s;
         }
 
         .updateButton:hover {
@@ -153,32 +180,37 @@
     </style>
 </head>
 <body>
-<div class="container">
-  <div id="cart-container">
-    <div id="cart-icon">
-      <i class="fas fa-shopping-cart"></i>
+  <div class="logo">
+        <img src="https://rebeccaorona.github.io/img/LogoBlahaj.png" alt="Comercio Blahaj Logo">
     </div>
-    <a id="carritoLink" href="#">Carrito</a>
-  </div>
-  <!-- Elemento para mostrar el mensaje de bienvenida -->
-    <p id="welcomeMessage"></p>
-   <div class="container mt-4">
-  <div id="userInfo" class="card" style="display: none">
-    <div class="card-body">
-      <h5 class="card-title">Información del Usuario</h5>
-      <p class="card-text"><strong>Nombre: </strong> <span id="userName"></span></p>
-      <p class="card-text"><strong>Email:</strong> <span id="userEmail"></span></p>
-      <p class="card-text"><strong>Edad:</strong> <span id="userAge"></span></p>
-      <p class="card-text"><strong>Rol:</strong> <span id="userRole"></span></p>
-      <div id="userButtonContainer">
-          
+    <div class="logo-text">
+        Comercio Blåhaj
+    </div>
+  <div class="container">
+    <div id="cart-container">
+      <div id="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
       </div>
-      <a id="miPerfilButton" href="/profile" class="btn btn-primary">
-        <i class="fas fa-user"></i> Mi perfil
-      </a>
+      <a id="carritoLink" href="#">Carrito (<span id="cart-count">0</span>)</a>
+    </div>
+    <p id="welcomeMessage"></p>
+    <div class="container mt-4">
+    <div id="userInfo" class="card" style="display: none">
+      <div class="card-body">
+        <h5 class="card-title">Información del Usuario</h5>
+        <p class="card-text"><strong>Nombre: </strong> <span id="userName"></span></p>
+        <p class="card-text"><strong>Email:</strong> <span id="userEmail"></span></p>
+        <p class="card-text"><strong>Edad:</strong> <span id="userAge"></span></p>
+        <p class="card-text"><strong>Rol:</strong> <span id="userRole"></span></p>
+        <div id="userButtonContainer">
+            
+        </div>
+        <a id="miPerfilButton" href="/profile" class="btn btn-primary">
+          <i class="fas fa-user"></i> Mi perfil
+        </a>
+      </div>
     </div>
   </div>
-</div>
   <h1>Lista de productos</h1>
   
   <ul>

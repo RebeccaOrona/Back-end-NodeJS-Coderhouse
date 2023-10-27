@@ -4,7 +4,7 @@ import socketIoClient from 'https://cdn.jsdelivr.net/npm/socket.io-client@4.7.2/
 const socket = socketIoClient();
 var cartId = null;
 let purchaser = null;
-let baseUrl = 'https://back-end-nodejs-coderhouse-development.up.railway.app';
+let baseUrl = 'https://back-end-nodejs-coderhouse-production.up.railway.app';
 const updateProductForm = document.querySelector('.update-product-form');
 
 function addAfter(referenceNode, newNode) {
@@ -137,6 +137,11 @@ function getCookie(name) {
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function updateCartCount(count) {
+  const cartCountElement = document.getElementById('cart-count');
+  cartCountElement.textContent = count;
+}
+
 const token = getCookie('cookieToken'); 
 
 socket.on('newClientConnected', async() => {
@@ -161,6 +166,8 @@ socket.on('newClientConnected', async() => {
             cartId = cart.cart[0]._id;
             carritoLink.href = `/api/carts/${cartId}`;
             socket.emit('cartCreated', cartId);
+            const numProductsInCart = cart.cart[0].products.length;
+              updateCartCount(numProductsInCart);
           } else {
             fetch('/api/carts')
             .then(response => response.json())
@@ -168,6 +175,8 @@ socket.on('newClientConnected', async() => {
               cartId = response.data.cartId
               carritoLink.href = `/api/carts/${cartId}`;
               socket.emit('cartCreated', cartId);
+              const numProductsInCart = response.data.cart[0].products.length;
+              updateCartCount(numProductsInCart);
             });
           };
         });
@@ -217,11 +226,11 @@ socket.on('newClientConnected', async() => {
             
             const adminButton = document.createElement('a');
             adminButton.href = 'https://back-end-nodejs-coderhouse-production.up.railway.app/api/users';
-            adminButton.textContent = 'Users';
+            adminButton.textContent = 'Usuarios';
             adminButton.classList.add('btn', 'btn-primary');
             userButtonContainer.appendChild(adminButton);
           } else {
-
+        
             
           nameElement.textContent = userData.payload.name;
             
@@ -241,21 +250,21 @@ var productId = null;
   document.addEventListener('click', async (event) => {
     if (event.target.classList.contains('addToCartButton')) {
     
-      productName = event.target.getAttribute('data-title');
+      let productName = event.target.getAttribute('data-title');
+      console.log(productName)
       productId = event.target.getAttribute('data-productId');
       try {
-        const response = await fetch(`${baseUrl}/api/carts/${cartId}/product/${productId}`, {
+        fetch(`${baseUrl}/api/carts/${cartId}/product/${productId}`, {
           method: 'POST',
           credentials: 'include', // Incluir cookies  
-        });
-          
-        if (response.status === 403) {
-          Swal.fire("No puedes agregar productos al carrito", "No eres un usuario válido", "error");
-        } else if (!response.ok) {
-          throw new Error('Request failed');
-        } else {
-          socket.emit('addToCart', {name: productName} );
-        }
+        }).then(response => response.json())
+        .then(result => {
+          if (result.status === 400) {
+            Swal.fire("No puedes agregar productos al carrito", "No eres un usuario válido", "error");
+          } else {
+            socket.emit('addToCart', {name: productName} );
+          }
+        })
     } catch (error) {
       console.error('Error:', error);
     }
@@ -274,7 +283,14 @@ var productId = null;
       showConfirmButton: false,
       timer: 3000
     });
-  
+    fetch(`/api/carts/findCartByPurchaser/${purchaser}`)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result)
+          const numProductsInCart = result.cart[0].products.length;
+          console.log(result.cart[0].products.length)
+          updateCartCount(numProductsInCart);
+        })
   });
   
 

@@ -4,6 +4,27 @@
     <title>Cart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        .logo {
+            text-align: left;
+            padding: 20px 20px;
+        }
+
+        .logo img {
+            position: relative;
+            width: 50px;
+            left: 20px;
+            top: -10px;
+        }
+        
+        .logo-text {
+            position: relative;
+            top: -30px;
+            float: left;
+            font-size: 15px;
+            left: 10px;
+            color: #007BFF;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
@@ -68,7 +89,7 @@
         #productListButton {
             position: absolute;
             top: 10px;
-            left: 10px;
+            left: 130px;
         }
         .product-items-container {
             display: block;
@@ -76,6 +97,12 @@
     </style>
 </head>
 <body>
+    <div class="logo">
+        <img src="https://rebeccaorona.github.io/img/LogoBlahaj.png" alt="Comercio Blahaj Logo">
+    </div>
+    <div class="logo-text">
+        Comercio Blåhaj
+    </div>
     <div class="cartContainer">
         <h1><i class="fas fa-shopping-cart"></i> Carrito </h1>
         <div data-cart-id="{{cart._id}}"></div>

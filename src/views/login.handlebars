@@ -5,13 +5,34 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        .logo {
+            text-align: left;
+            padding: 20px 20px;
+        }
+
+        .logo img {
+            position: relative;
+            width: 50px;
+            left: 20px;
+        }
+        .logo-text {
+            position: relative;
+            top: -20px;
+            float: left;
+            font-size: 16px;
+            left: 10px;
+            color: #007BFF;
+            
+        }
+
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             margin: 0;
             padding: 0;
         }
-
+        
         .container {
             max-width: 400px;
             margin: 50px auto;
@@ -78,9 +99,15 @@
     </style>
 </head>
 <body>
+    <div class="logo">
+        <img src="https://rebeccaorona.github.io/img/LogoBlahaj.png" alt="Comercio Blahaj Logo">
+    </div>
+    <div class="logo-text">
+        Comercio Blåhaj
+    </div>
     <div class="container">
         <div class="login-heading">
-            <h1>Iniciar sesion</h1>
+            <h1>Iniciar sesión</h1>
         </div>
         <form class="login-form" id="loginForm">
             <div class="form-group">

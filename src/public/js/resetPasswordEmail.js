@@ -11,6 +11,7 @@ form.addEventListener('submit', e=>{
     messageContainer.style.padding = "10px";
     messageContainer.style.color = "black";
     messageContainer.style.marginTop = "10px";
+    messageContainer.style.textAlign = "center";
     fetch('/api/users/sendResetPassEmail',{
         method:'POST',
         body:JSON.stringify(data),

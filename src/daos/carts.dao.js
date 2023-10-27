@@ -44,10 +44,8 @@ export default class CartsDao {
     async addProductPremium(cid,pid,owner){
         try{
             let foundProduct = await productsModel.find({_id:pid});
-            console.log(foundProduct)
-            console.log(foundProduct[0].owner)
             if(foundProduct[0].owner == owner){
-                return "Failed to add that product to the cart, you can not add your own products"
+                return ({status:400 ,message:"Failed to add that product to the cart, you can not add your own products"})
             } else {
             let cart = await cartsModel.findById(cid);
             let products = cart.products;

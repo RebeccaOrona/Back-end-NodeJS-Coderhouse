@@ -50,7 +50,7 @@
         }
 
        #productsButton {
-            position: fixed;
+            position: absolute;
             top: 10px;
             left: 130px;
             z-index: 9999;
@@ -99,13 +99,13 @@
     <div class="logo-text">
         Comercio Blåhaj
     </div>
+    <a id="productsButton" href="/products" class="btn btn-primary">
+        <i class="fas fa-list-ul"></i> Volver a lista de productos
+    </a>
+    <a id="logoutButton" href="/logout" class="btn btn-primary">
+        <i class="fas fa-sign-out"></i> Cerrar sesión
+    </a>
     <div class="container">
-        <a id="productsButton" href="/products" class="btn btn-primary">
-            <i class="fas fa-list-ul"></i> Volver a lista de productos
-        </a>
-        <a id="logoutButton" href="/logout" class="btn btn-primary">
-            <i class="fas fa-sign-out"></i> Cerrar sesión
-        </a>
         <div class="profile-heading">
             <h1>Tu perfil</h1>
         </div>
@@ -116,6 +116,7 @@
             <p><span>Rol:</span> <span id="userRole"></span></p>
         </div>
     </div>
+    {{> footer}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             async function fetchUserDataAndPopulateTemplate() {

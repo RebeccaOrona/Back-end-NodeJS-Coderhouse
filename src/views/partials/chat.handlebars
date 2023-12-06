@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+    <style>
+            
+        #messages {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 0; 
+        overflow-y: auto; 
+        max-height: 90%;
+        }
+
+        #messages li {
+        margin-bottom: 10px;
+        padding: 5px;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        }
+
+        #close-chat-space {
+        display: inline-block;
+        width: 20px;
+        }
+        #close-chat-button {
+            position: absolute;
+            top: 20px;
+            left: 0px;
+            background-color: transparent;
+            cursor: pointer;
+            font-size: 25px;
+            padding: 5px;
+            color: #dbebffeb;
+            border: none;
+            transition: transform 0.3s ease, left 0.3s ease;;
+            transform: scale(1);
+        }
+
+        #close-chat-button:hover {
+            transform: scale(1.2);
+        }
+        
+        #form {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        }
+
+        #input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+        position: relative;
+        }
+
+        #submit-button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        }
+
+        #chat {
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            transition: width 0.3s ease-in-out;
+            background-color: #332a9600;
+            padding: 10px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column; /* Make the chat container a flex container */
+        }
+
+        #chat.open {
+            width: 450px;
+            height: 630px;
+            max-height: 630px;
+            overflow-y: scroll;
+            background-color: #268efeda;
+        }
+
+        #form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto; /* Push the form to the bottom */
+            padding: 10px;
+            background-color: transparent; /* Add a background color for contrast */
+        }
+
+        #input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #send {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #chat-container {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        #chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 50%;
+            padding: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat" class="show-chat">
+            <div id="close-chat-container">
+                <span id="close-chat-space"></span>
+                <button id="close-chat-button">×</button>
+            </div>
+            <ul id="messages"></ul>
+            <form id="form">
+                <input id="input" autocomplete="off" />
+                <button id="send"><i class="fas fa-paper-plane"></i>Enviar</button>
+            </form>
+        </div>
+        <div id="chat-icon">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+    </div>
+
+    
+
+    
+    <script type="module" src="/js/chat.js"></script>
+</body>
+</html>

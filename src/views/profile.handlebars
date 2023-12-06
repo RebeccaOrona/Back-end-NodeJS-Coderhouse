@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tu Perfil</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .logo {
+            text-align: left;
+            padding: 20px 20px;
+        }
+
+        .logo img {
+            position: relative;
+            width: 50px;
+            left: 20px;
+            top: -10px;
+        }
+
+        .logo-text {
+            position: relative;
+            top: -30px;
+            float: left;
+            font-size: 15px;
+            left: 10px;
+            color: #007BFF;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #logoutButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-decoration: underline;
+        }
+
+       #productsButton {
+            position: absolute;
+            top: 10px;
+            left: 130px;
+            z-index: 9999;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: underline;
+        }
+
+        #productsButton:hover {
+            text-decoration: underline;
+            background-color: #0056b3;
+        }
+
+        .profile-heading {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-details {
+            margin-bottom: 10px;
+        }
+
+        .profile-details p {
+            margin-bottom: 5px;
+        }
+
+        .profile-details p span {
+            font-weight: bold;
+        }
+        #userName,
+        #userEmail,
+        #userAge,
+        #userRole {
+            font-weight: normal; 
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="https://rebeccaorona.github.io/img/LogoBlahaj.png" alt="Comercio Blahaj Logo">
+    </div>
+    <div class="logo-text">
+        Comercio Blåhaj
+    </div>
+    <a id="productsButton" href="/products" class="btn btn-primary">
+        <i class="fas fa-list-ul"></i> Volver a lista de productos
+    </a>
+    <a id="logoutButton" href="/logout" class="btn btn-primary">
+        <i class="fas fa-sign-out"></i> Cerrar sesión
+    </a>
+    <div class="container">
+        <div class="profile-heading">
+            <h1>Tu perfil</h1>
+        </div>
+        <div class="profile-details">
+            <p><span>Nombre:</span> <span id="userName"></span></p>
+            <p><span>Email:</span> <span id="userEmail"></span></p>
+            <p><span>Edad:</span> <span id="userAge"></span></p>
+            <p><span>Rol:</span> <span id="userRole"></span></p>
+        </div>
+    </div>
+    {{> footer}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            async function fetchUserDataAndPopulateTemplate() {
+            try {
+                // Funcion para obtener el valor de una cookie en especifico
+                function getCookieValue(cookieName) {
+                    const cookies = document.cookie.split('; ');
+                    for (const cookie of cookies) {
+                        const [name, value] = cookie.split('=');
+                        if (name === cookieName) {
+                            return decodeURIComponent(value);
+                        }
+                    }
+                return null; // No se encontro la cookie
+                }
+
+                // Usage
+                const cookieTokenValue = getCookieValue('cookieToken');
+                if (cookieTokenValue == null) {
+                    console.error('Cookie not found');
+                }
+            
+
+                const response = await fetch('https://back-end-nodejs-coderhouse-production.up.railway.app/api/users/currentUser', {
+                    headers: {
+                        'Authorization': `Bearer ${cookieTokenValue}`
+                    }
+                });
+
+                if (!response.ok) {
+                    console.error('Response status:', response.status);
+                    throw new Error('Failed to fetch user data');
+                }
+
+                const userDataJson = await response.json();
+                const userData = userDataJson.payload;
+
+                // Actualizo los datos con la data de usuario
+                document.getElementById('userName').textContent = userData.name || 'No existente';
+                document.getElementById('userEmail').textContent = userData.email || 'No existente';
+                document.getElementById('userAge').textContent = userData.age || 'No existente';
+                document.getElementById('userRole').textContent = userData.role || 'No existente';
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+
+        // Llamar a la funcion para el fetch y populate de la data de usuario
+        fetchUserDataAndPopulateTemplate();
+    });
+</script>
+</body>
+</html>

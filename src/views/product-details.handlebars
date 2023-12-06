@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .logo {
+            text-align: left;
+            padding: 20px 20px;
+        }
+
+        .logo img {
+            position: relative;
+            width: 50px;
+            left: -615px;
+            top: -10px;
+        }
+        
+        .logo-text {
+            position: relative;
+            top: -30px;
+            float: left;
+            font-size: 15px;
+            left: 10px;
+            color: #007BFF;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        h2 {
+         text-align: center;
+        }
+
+        p {
+            margin: 5px 0;
+            text-align: center;
+        }   
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        img {
+            max-width: 50%;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .addToCartButton {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+
+        .addToCartButton:hover {
+            background-color: #0056b3;
+        }
+        #productsButton {
+            position: relative;
+            top: -90px;
+            left: 20px;
+            z-index: 9999;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: underline;
+        }
+
+        #productsButton:hover {
+            text-decoration: underline;
+            background-color: #0056b3;
+        }
+        
+        #carritoLink {
+            position: relative;
+            top: -70px;
+            left: 130px;
+            z-index: 9999;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: underline;
+        }
+
+        #carritoLink:hover {
+            text-decoration: underline;
+            background-color: #0056b3;
+        }
+
+        #logoutButton {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="https://rebeccaorona.github.io/img/LogoBlahaj.png" alt="Comercio Blahaj Logo">
+    </div>
+    <div class="logo-text">
+        Comercio Blåhaj
+    </div>
+    <div>
+        <a id="productsButton" href="/products">
+            <i class="fas fa-list-ul"></i> Volver a lista de productos
+        </a>
+    </div>
+    <div>
+        <a id="carritoLink" href="#">
+            <i class="fas fa-shopping-cart"></i> Carrito
+        </a>
+    </div>
+
+    <h1>{{title}}</h1>
+    <ul>
+        <li><strong>Descripcion:</strong> {{description}}</li>
+        <li><strong>Precio:</strong> {{price}}</li>
+        <li><strong>Categoria:</strong> {{category}}</li>
+        <li><strong>Codigo:</strong> {{code}}</li>
+        <li><strong>Estado:</strong> {{status}}</li>
+        <li><strong>Stock:</strong> {{stock}}</li>
+    </ul>
+    <h2>Imagen</h2>
+    <ul>
+        {{#each thumbnail}}
+        <li><img src="{{this}}" alt="Imagen"></li>
+        {{/each}}
+    </ul>
+    <button class="addToCartButton" data-productId="{{this._id}}" data-cartId="{{cartId}}">
+        <i class="fas fa-cart-plus"></i> Agregar al carrito
+    </button>
+    <a id="logoutButton" href="/logout">
+        <i class="fas fa-sign-out"></i> Cerrar sesión
+    </a>
+</body>
+</html>
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/socket.io-client/dist/socket.io.js"></script>
+<script type="module" src="/js/indexProducts.js"></script>

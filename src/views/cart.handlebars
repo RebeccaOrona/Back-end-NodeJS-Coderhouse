@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .logo {
+            text-align: left;
+            padding: 20px 20px;
+        }
+
+        .logo img {
+            position: relative;
+            width: 50px;
+            left: 20px;
+            top: -10px;
+        }
+        
+        .logo-text {
+            position: relative;
+            top: -30px;
+            float: left;
+            font-size: 15px;
+            left: 10px;
+            color: #007BFF;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cartContainer {
+            position: absolute;
+            top: 30px;
+            left: 160px;
+            width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #007BFF;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: inline-block;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            color: #007BFF;
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        .btn {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        #logoutButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        #productListButton {
+            position: absolute;
+            top: 10px;
+            left: 130px;
+        }
+        .product-items-container {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="https://rebeccaorona.github.io/img/LogoBlahaj.png" alt="Comercio Blahaj Logo">
+    </div>
+    <div class="logo-text">
+        Comercio Blåhaj
+    </div>
+    <div class="cartContainer">
+        <h1><i class="fas fa-shopping-cart"></i> Carrito </h1>
+        <div data-cart-id="{{cart._id}}"></div>
+        <div class="product-items-container">
+        {{#each cart.products}}
+        <div class="cart-item" id="cart-item-{{@index}}">
+            <div data-product-id={{this.product._id}}></div>
+            <h3><a href="/api/products/{{this.product._id}}">{{this.product.title}}</a></h3>
+            <p>Precio: {{this.product.price}}</p>
+            <p>Cantidad: <span class="quantity">{{this.quantity}}</span></p>
+            <button class="increment-btn" data-product-index="{{@index}}"><i class="fas fa-plus-circle"></i></button>
+            <button class="decrement-btn" data-product-index="{{@index}}"><i class="fas fa-minus-circle"></i></button>
+        </div>
+        {{/each}}
+        </div>
+        <button id="purchaseButton" class="btn">Comprar carrito</button>
+    </div>
+    <a id="productListButton" href="/products" class="btn">
+        <i class="fas fa-list-ul"></i> Volver a lista de productos
+    </a>
+    <a id="logoutButton" href="/logout" class="btn">
+        <i class="fas fa-sign-out"></i> Cerrar sesión
+    </a> 
+    
+</body>
+</html>
+
+<script type="module" src="/js/cart.js"></script>

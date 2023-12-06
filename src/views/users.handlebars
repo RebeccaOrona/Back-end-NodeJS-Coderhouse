@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .logo {
+            text-align: left;
+            padding: 20px 20px;
+        }
+
+        .logo img {
+            position: relative;
+            width: 50px;
+            left: 20px;
+            top: -10px;
+        }
+        
+        .logo-text {
+            position: relative;
+            top: -30px;
+            float: left;
+            font-size: 15px;
+            left: 10px;
+            color: #007BFF;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #007BFF;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .user-list-container {
+            border: 2px solid #bbb9b9; 
+            border-radius: 10px; 
+            padding: 20px; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background-color: #f9f9f9; 
+        }
+        .user-list-container ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .user-list-container li {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px 0; 
+            padding: 10px; 
+        }
+
+        #productsButton {
+            position: absolute;
+            top: 10px;
+            left: 130px;
+            z-index: 9999;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .updateButton {
+            background-color: #de5a98;
+            color: #fff; 
+            border: none; 
+            padding: 8px 16px;
+            border-radius: 4px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+        }
+
+       
+        .updateButton:hover {
+            background-color: #c64287; 
+        }
+
+        .deleteButton {
+            background-color: #da2b04; 
+            color: #fff; 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+        }
+
+        .deleteButton:hover {
+            background-color: #9e1a06;
+        }
+
+        #logout-container {
+          display: flex;
+          align-items: center;
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          margin-left: 20px;
+        }
+
+        #logout-icon {
+          color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">
+        <img src="https://rebeccaorona.github.io/img/LogoBlahaj.png" alt="Comercio Blahaj Logo">
+    </div>
+    <div class="logo-text">
+        Comercio Blåhaj
+    </div>
+    <h1>Lista de usuarios</h1>
+    <a id="productsButton" href="/products" class="btn btn-primary">
+        <i class="fas fa-list-ul"></i> Volver a lista de productos
+    </a>
+
+   <div class="user-list-container">
+    <ul>
+        {{#each users}}
+        <li>
+            <strong>{{name}}</strong> ({{email}}) - Rol: {{role}}
+            <form id="updateRoleForm" data-email="{{email}}">
+                <label for="role">Cambiar Rol:</label>
+                <select name="role" id="role">
+                    <option value="usuario">Usuario</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <button class="updateButton" type="button" onclick="updateRole(this)">Actualizar Rol</button>
+            </form>
+            <form id="deleteUserForm" data-email="{{email}}">
+                <button class="deleteButton" type="button" onclick="deleteUser(this)">Eliminar Usuario</button>
+            </form>
+            
+        </li>
+        {{/each}}
+    </ul>
+   </div>
+    <div id="logout-container">
+      <div id="logout-icon">
+        <i class="fas fa-sign-out"></i>
+      </div>
+      <a id="logoutButton" href="/logout">Cerrar sesión</a>
+    </div>
+    <script src="/js/users.js"></script>
+    {{> footer}}
+</body>
+</html>
